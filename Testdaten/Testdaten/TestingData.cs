@@ -64,8 +64,8 @@ namespace Testdaten
             for (int i = 0; i < Counter; i++)
             {
                 Temperature.BaseTemperature += rnd.Next(Temperature.Decrement, Temperature.Increment + 1);
-                Humidity.BaseHumidity = (Humidity.BaseHumidity < -50) ? -50 : Humidity.BaseHumidity;
-                Humidity.BaseHumidity = (Humidity.BaseHumidity > 50) ? 50 : Humidity.BaseHumidity;
+                Temperature.BaseTemperature = (Temperature.BaseTemperature < -50) ? -50 : Temperature.BaseTemperature;
+                Temperature.BaseTemperature = (Temperature.BaseTemperature > 50) ? 50 : Temperature.BaseTemperature;
 
                 Brightness.BaseBrightness += rnd.Next(Brightness.Decrement, Brightness.Increment + 1);
                 Brightness.BaseBrightness = (Brightness.BaseBrightness < 0) ? 0 : Brightness.BaseBrightness;
@@ -85,6 +85,7 @@ namespace Testdaten
                 command.Parameters.AddWithValue("@Helligkeit", Brightness.BaseBrightness);
                 command.Parameters.AddWithValue("@Datum", Date.StartDate);
 
+                Console.WriteLine("Schreibe Datensatz " + i);
                 command.ExecuteNonQuery();
                 command.Parameters.Clear();
                 Date.StartDate = Date.StartDate.AddMinutes(Date.IncrementMinutes);
