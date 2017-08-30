@@ -64,12 +64,20 @@ namespace Testdaten
             for (int i = 0; i < Counter; i++)
             {
                 Temperature.BaseTemperature += rnd.Next(Temperature.Decrement, Temperature.Increment + 1);
+                Humidity.BaseHumidity = (Humidity.BaseHumidity < -50) ? -50 : Humidity.BaseHumidity;
+                Humidity.BaseHumidity = (Humidity.BaseHumidity > 50) ? 50 : Humidity.BaseHumidity;
+
                 Brightness.BaseBrightness += rnd.Next(Brightness.Decrement, Brightness.Increment + 1);
                 Brightness.BaseBrightness = (Brightness.BaseBrightness < 0) ? 0 : Brightness.BaseBrightness;
+                Brightness.BaseBrightness = (Brightness.BaseBrightness > 25000) ? 25000 : Brightness.BaseBrightness;
+
                 Humidity.BaseHumidity += rnd.Next(Humidity.Decrement, Humidity.Increment + 1);
                 Humidity.BaseHumidity = (Humidity.BaseHumidity < 0) ? 0 : Humidity.BaseHumidity;
+                Humidity.BaseHumidity = (Humidity.BaseHumidity > 100) ? 100 : Humidity.BaseHumidity;
+
                 WindVelocity.BaseWindVelocity += rnd.Next(WindVelocity.Decrement, WindVelocity.Increment + 1);
                 WindVelocity.BaseWindVelocity = (WindVelocity.BaseWindVelocity < 0) ? 0 : WindVelocity.BaseWindVelocity;
+                WindVelocity.BaseWindVelocity = (WindVelocity.BaseWindVelocity < 200) ? 200 : WindVelocity.BaseWindVelocity;
 
                 command.Parameters.AddWithValue("@Temperatur", Temperature.BaseTemperature);
                 command.Parameters.AddWithValue("@Luftfeuchtigkeit", Humidity.BaseHumidity);

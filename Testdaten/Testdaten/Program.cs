@@ -13,7 +13,7 @@ namespace Testdaten
 
             // Nicht perfekt, aber zum schnellen Erstellen von Testdaten reicht es...
 
-            TestingData data = new TestingData(50);
+            TestingData data = new TestingData(10000);
             data.CreateTestData();
         }
     }
