@@ -25,13 +25,29 @@ namespace Serial_Client
     public partial class MainWindow : Window
     {
         public DataBase db;
-
+        public SerialPort port;
         public MainWindow()
         {
-
             db = new DataBase();
             InitializeComponent();
             ListAllComPorts();
+            FillBoxes();
+        }
+
+        private void FillBoxes()
+        {
+            this.cmbParity.ItemsSource = Enum.GetValues(typeof(Parity)).Cast<Parity>();
+            this.cmbParity.SelectedValue = Parity.Even;
+            this.cmbHandshake.ItemsSource = Enum.GetValues(typeof(Handshake)).Cast<Handshake>();
+            this.cmbHandshake.SelectedValue = Handshake.None;
+            this.cmbBaud.ItemsSource = PortOptions.BaudRateList;
+            this.cmbBaud.SelectedValue = 9600;
+            this.cmbStop.ItemsSource = Enum.GetValues(typeof(StopBits)).Cast<StopBits>();
+            this.cmbStop.SelectedValue = StopBits.One;
+        }
+
+        private void btnOpenPort_Click(object sender, RoutedEventArgs e)
+        {
 
         }
 
@@ -47,9 +63,9 @@ namespace Serial_Client
             try
             {
                 db.Connection.Open();
-                var asdf = cmd.ExecuteReader();
-                table.Load(asdf);
-                asdf.Close();
+                var tableContent = cmd.ExecuteReader();
+                table.Load(tableContent);
+                tableContent.Close();
                 db.Connection.Close();
             }
             catch (Exception ex )
@@ -79,14 +95,18 @@ namespace Serial_Client
 
         private void btnTestWerte_Click(object sender, RoutedEventArgs e)
         {
-            db.Connection.Open();
-            string query = $"delete from {db.Table}";
-            SqlCommand cmd = new SqlCommand(query, db.Connection);
-            cmd.ExecuteNonQuery();
+            MessageBoxButton button = MessageBoxButton.YesNoCancel;
+            if (MessageBox.Show("Sicher, dass 100000 Datensätze in die Datenbank geschrieben werden sollen?","Sicher?",button)==MessageBoxResult.OK)
+            {
+                db.Connection.Open();
+                string query = $"delete from {db.Table}";
+                SqlCommand cmd = new SqlCommand(query, db.Connection);
+                cmd.ExecuteNonQuery();
 
-            TestingData test = new TestingData(100000);
-            test.CreateTestData();
-            db.Connection.Close();
-        }
+                TestingData test = new TestingData(100000);
+                test.CreateTestData();
+                db.Connection.Close();
+
+            }        }
     }
 }

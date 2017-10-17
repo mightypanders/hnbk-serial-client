@@ -61,6 +61,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PortOptions.cs" />
+    <Compile Include="TemperaturDaten.cs" />
     <Compile Include="TestingData.cs" />
     <Page Include="MainWindow.xaml">
       <SubType>Designer</SubType>
