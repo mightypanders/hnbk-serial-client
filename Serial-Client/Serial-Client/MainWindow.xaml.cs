@@ -28,7 +28,9 @@ namespace Serial_Client
         public SerialPort port;
         public MainWindow()
         {
+            var bla = PortOptions.DataBits;
             db = new DataBase();
+            port = initPort();
             InitializeComponent();
             ListAllComPorts();
             FillBoxes();
@@ -44,11 +46,33 @@ namespace Serial_Client
             this.cmbBaud.SelectedValue = 9600;
             this.cmbStop.ItemsSource = Enum.GetValues(typeof(StopBits)).Cast<StopBits>();
             this.cmbStop.SelectedValue = StopBits.One;
+            this.cmbDatabit.ItemsSource = PortOptions.DataBitList;
+            this.cmbDatabit.SelectedValue = 8;
         }
 
         private void btnOpenPort_Click(object sender, RoutedEventArgs e)
         {
 
+            if (!this.port.IsOpen)
+            {
+                PortOptions.BaudRate = int.Parse(this.cmbBaud.SelectedValue.ToString());
+                PortOptions.Handshake = (Handshake)this.cmbHandshake.SelectedItem;
+                PortOptions.Parity = (Parity)this.cmbParity.SelectedItem;
+                PortOptions.StopBits = (StopBits)this.cmbStop.SelectedItem;
+                PortOptions.DataBits = int.Parse(this.cmbDatabit.SelectedValue.ToString());
+                port = initPort();
+            }
+        }
+
+        private SerialPort initPort()
+        {
+            SerialPort port = new SerialPort();
+                port.DataBits = PortOptions.DataBits;
+                port.Handshake = PortOptions.Handshake;
+                port.BaudRate = PortOptions.BaudRate;
+                port.Parity = PortOptions.Parity;
+            port.StopBits = PortOptions.StopBits;
+            return port;
         }
 
         private void btnFillgrid_Click(object sender, RoutedEventArgs e)

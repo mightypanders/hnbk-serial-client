@@ -27,5 +27,7 @@
         <Label Content="Handshake" HorizontalAlignment="Left" Margin="10,102,0,0" VerticalAlignment="Top"/>
         <Label Content="Baudrate" HorizontalAlignment="Left" Margin="10,133,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="cmbBaud" HorizontalAlignment="Left" Margin="81,137,0,0" VerticalAlignment="Top" Width="120"/>
+        <ComboBox x:Name="cmbDatabit" HorizontalAlignment="Left" Margin="81,164,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Databits" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
