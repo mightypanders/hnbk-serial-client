@@ -8,16 +8,12 @@ namespace Serial_Client
 {
     class TemperaturDaten
     {
-        string _temperatur;
-        string _luftfeuchtigkeit;
-        string _windgeschwindigkeit;
-        string _helligkeit;
+        decimal _temperatur;
         DateTime _datum;
+        string _workstation;
 
-        public string Temperatur { get => _temperatur; set => _temperatur = value; }
-        public string Luftfeuchtigkeit { get => _luftfeuchtigkeit; set => _luftfeuchtigkeit = value; }
-        public string Windgeschwindigkeit { get => _windgeschwindigkeit; set => _windgeschwindigkeit = value; }
-        public string Helligkeit { get => _helligkeit; set => _helligkeit = value; }
+        public decimal Temperatur { get => _temperatur; set => _temperatur = value; }
         public DateTime Datum { get => _datum; set => _datum = value; }
+        public string Workstation { get => _workstation; set => _workstation = value; }
     }
 }
