@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
@@ -24,6 +26,8 @@ namespace Serial_Client
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool _continue = false;
+        private List<TemperaturDaten> _buffer;
         public DataBase db;
         public SerialPort port;
         public MainWindow()
@@ -55,23 +59,27 @@ namespace Serial_Client
 
             if (!this.port.IsOpen)
             {
+                PortOptions.PortName = this.cmbPorts.SelectedValue.ToString();
                 PortOptions.BaudRate = int.Parse(this.cmbBaud.SelectedValue.ToString());
                 PortOptions.Handshake = (Handshake)this.cmbHandshake.SelectedItem;
                 PortOptions.Parity = (Parity)this.cmbParity.SelectedItem;
                 PortOptions.StopBits = (StopBits)this.cmbStop.SelectedItem;
                 PortOptions.DataBits = int.Parse(this.cmbDatabit.SelectedValue.ToString());
                 port = initPort();
+                port.Open();
             }
         }
 
         private SerialPort initPort()
         {
             SerialPort port = new SerialPort();
-                port.DataBits = PortOptions.DataBits;
-                port.Handshake = PortOptions.Handshake;
-                port.BaudRate = PortOptions.BaudRate;
-                port.Parity = PortOptions.Parity;
+            port.PortName = PortOptions.PortName;
+            port.DataBits = PortOptions.DataBits;
+            port.Handshake = PortOptions.Handshake;
+            port.BaudRate = PortOptions.BaudRate;
+            port.Parity = PortOptions.Parity;
             port.StopBits = PortOptions.StopBits;
+            port.DataReceived += new SerialDataReceivedEventHandler(this.DataReceived);
             return port;
         }
 
@@ -83,7 +91,7 @@ namespace Serial_Client
         {
             this.grDB.DataContext = null;
             SqlCommand cmd = new SqlCommand($"Select * from {db.Table}", db.Connection);
-                DataTable table = new DataTable();
+            DataTable table = new DataTable();
             try
             {
                 db.Connection.Open();
@@ -92,7 +100,7 @@ namespace Serial_Client
                 tableContent.Close();
                 db.Connection.Close();
             }
-            catch (Exception ex )
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -102,8 +110,8 @@ namespace Serial_Client
         private void ListAllComPorts()
         {
             this.cmbPorts.ItemsSource = SerialPort.GetPortNames();
-            if (this.cmbPorts.Items.Count >0)
-            this.cmbPorts.SelectedIndex = 0;
+            if (this.cmbPorts.Items.Count > 0)
+                this.cmbPorts.SelectedIndex = 0;
         }
 
         private void btnRead_Click(object sender, RoutedEventArgs e)
@@ -114,23 +122,90 @@ namespace Serial_Client
         private string getStringfromSerialPort()
         {
             //throw new NotImplementedException();
+            string retString = port.ReadLine();
             return "";
         }
+
+        private void DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+        }
+        public void Write()
+        {
+            string Dateiname;
+            Dateiname = DateTime.Now.ToString().Replace('.', '_');
+            Dateiname = Dateiname.Replace(':', '_') + ".txt";
+            
+            Dateiname = AppDomain.CurrentDomain.BaseDirectory + Dateiname;
+            StreamWriter tmpLog = File.AppendText(Dateiname);
+            while (_continue)
+            {
+                if (_buffer.Count > 0)
+                {
+                    try
+                    {
+                        tmpLog.WriteLine(_buffer.First().ToString());
+                        _buffer.RemoveAt(0);
+
+                        //Thread.Sleep(1000);
+                        tmpLog.Flush();
+                    }
+                    catch (TimeoutException)
+                    {
+                        Debug.WriteLine("Could not write to file");
+                    }
+                }
+            }
+            tmpLog.Close();
+        }
+        public void Read()
+        {
+            while (_continue)
+            {
+                try
+                {
+                    string message = port.ReadLine();
+                    TemperaturDaten data = new TemperaturDaten()
+                    {
+                        Temperatur = decimal.Parse(message.Remove(message.Length - 1).Replace(".", ",")),
+                        Datum = DateTime.Now
+                    };
+                    Console.WriteLine(message);
+                    _buffer.Add(data);
+
+                    //Thread.Sleep(1000);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                }
+            }
+        }
+
 
         private void btnTestWerte_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxButton button = MessageBoxButton.YesNoCancel;
-            if (MessageBox.Show("Sicher, dass 100000 Datensätze in die Datenbank geschrieben werden sollen?","Sicher?",button)==MessageBoxResult.OK)
+            if (MessageBox.Show("Sicher, dass 100000 Datensätze in die Datenbank geschrieben werden sollen?", "Sicher?", button) == MessageBoxResult.OK)
             {
                 db.Connection.Open();
-                string query = $"delete from {db.Table}";
-                SqlCommand cmd = new SqlCommand(query, db.Connection);
-                cmd.ExecuteNonQuery();
+                try
+                {
+                    string query = $"delete from {db.Table}";
+                    SqlCommand cmd = new SqlCommand(query, db.Connection);
+                    cmd.ExecuteNonQuery();
 
-                TestingData test = new TestingData(100000);
-                test.CreateTestData();
-                db.Connection.Close();
+                    TestingData test = new TestingData(100000);
+                    test.CreateTestData();
 
-            }        }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    throw;
+                }
+                finally { db.Connection.Close(); }
+
+            }
+        }
     }
 }
