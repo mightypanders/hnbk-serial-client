@@ -135,6 +135,7 @@ Connection.ConnectionString = $"Data Source={this.ServerName};Initial Catalog={t
         public int Decrement { get => decrement; set => decrement = value; }
     }
 
+
     public class Brightness
     {
         private int baseBrightness;

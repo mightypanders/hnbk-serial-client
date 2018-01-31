@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Serial_Client"
         mc:Ignorable="d"
-        Title="Window1" Height="475" Width="500">
+        Title="Window1" Height="594" Width="500">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="201" x:Name="Left">
@@ -29,8 +29,10 @@
         <ComboBox x:Name="cmbBaud" HorizontalAlignment="Left" Margin="81,137,0,0" VerticalAlignment="Top" Width="120"/>
         <ComboBox x:Name="cmbDatabit" HorizontalAlignment="Left" Margin="81,164,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="Databits" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtPCName" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,288,0,0"/>
-        <Label Content="Rechnername" HorizontalAlignment="Left" Margin="10,261,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtPCName" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,271,0,0"/>
+        <Label Content="Rechnername" HorizontalAlignment="Left" Margin="10,244,0,0" VerticalAlignment="Top"/>
         <Label Content="Datenbank URL" HorizontalAlignment="Left" Margin="10,192,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtPCName_Copy" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,324,0,0"/>
+        <Label Content="Rechnername" HorizontalAlignment="Left" Margin="10,297,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

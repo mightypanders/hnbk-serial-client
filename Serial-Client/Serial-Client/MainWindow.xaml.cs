@@ -168,6 +168,7 @@ namespace Serial_Client
                     {
                         Temperatur = decimal.Parse(message.Remove(message.Length - 1).Replace(".", ",")),
                         Datum = DateTime.Now
+
                     };
                     Console.WriteLine(message);
                     _buffer.Add(data);
