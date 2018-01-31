@@ -34,7 +34,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,6 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="HnbkContext.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -61,6 +69,22 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Migrations\201801311559390_Initial.cs" />
+    <Compile Include="Migrations\201801311559390_Initial.Designer.cs">
+      <DependentUpon>201801311559390_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801311657163_Decimal.cs" />
+    <Compile Include="Migrations\201801311657163_Decimal.Designer.cs">
+      <DependentUpon>201801311657163_Decimal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801311705004_Float.cs" />
+    <Compile Include="Migrations\201801311705004_Float.Designer.cs">
+      <DependentUpon>201801311705004_Float.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Location.cs" />
+    <Compile Include="Models\Position.cs" />
+    <Compile Include="Models\Measurement.cs" />
     <Compile Include="PortOptions.cs" />
     <Compile Include="TemperaturDaten.cs" />
     <Compile Include="TestingData.cs" />
@@ -83,10 +107,20 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Migrations\201801311559390_Initial.resx">
+      <DependentUpon>201801311559390_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801311657163_Decimal.resx">
+      <DependentUpon>201801311657163_Decimal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801311705004_Float.resx">
+      <DependentUpon>201801311705004_Float.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

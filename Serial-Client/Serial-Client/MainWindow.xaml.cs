@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
@@ -17,6 +18,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using Serial_Client.Models;
 using Testdaten;
 
 namespace Serial_Client
@@ -26,15 +29,14 @@ namespace Serial_Client
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool _continue = false;
-        private List<TemperaturDaten> _buffer;
-        public DataBase db;
-        public SerialPort port;
+        private bool _reading = false;
+        private HnbkContext ctx = new HnbkContext();
+        //private List<TemperaturDaten> _buffer;
+        public SerialPort Port;
         public MainWindow()
         {
             var bla = PortOptions.DataBits;
-            db = new DataBase();
-            port = initPort();
+            Port = InitPort();
             InitializeComponent();
             ListAllComPorts();
             FillBoxes();
@@ -54,10 +56,13 @@ namespace Serial_Client
             this.cmbDatabit.SelectedValue = 8;
         }
 
-        private void btnOpenPort_Click(object sender, RoutedEventArgs e)
+        private void btnStart_Click(object sender, RoutedEventArgs e)
         {
+            btnStart.IsEnabled = false;
+            btnStop.IsEnabled = true;
+            _reading = true;
 
-            if (!this.port.IsOpen)
+            if (!this.Port.IsOpen)
             {
                 PortOptions.PortName = this.cmbPorts.SelectedValue.ToString();
                 PortOptions.BaudRate = int.Parse(this.cmbBaud.SelectedValue.ToString());
@@ -65,12 +70,14 @@ namespace Serial_Client
                 PortOptions.Parity = (Parity)this.cmbParity.SelectedItem;
                 PortOptions.StopBits = (StopBits)this.cmbStop.SelectedItem;
                 PortOptions.DataBits = int.Parse(this.cmbDatabit.SelectedValue.ToString());
-                port = initPort();
-                port.Open();
+                Port = InitPort();
+                Port.Open();
             }
+
+            Read();
         }
 
-        private SerialPort initPort()
+        private SerialPort InitPort()
         {
             SerialPort port = new SerialPort();
             port.PortName = PortOptions.PortName;
@@ -90,21 +97,14 @@ namespace Serial_Client
         private void FillGrid()
         {
             this.grDB.DataContext = null;
-            SqlCommand cmd = new SqlCommand($"Select * from {db.Table}", db.Connection);
-            DataTable table = new DataTable();
-            try
+            grDB.DataContext = ctx.Measurements.Select(x => new
             {
-                db.Connection.Open();
-                var tableContent = cmd.ExecuteReader();
-                table.Load(tableContent);
-                tableContent.Close();
-                db.Connection.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            this.grDB.DataContext = table.DefaultView;
+                Standort = x.Position.Location.Name,
+                Raum = x.Position.Room,
+                PC = x.Position.PcNumber,
+                Temperatur = x.Temperature,
+                Datum = x.Date
+            }).ToList();
         }
 
         private void ListAllComPorts()
@@ -114,66 +114,74 @@ namespace Serial_Client
                 this.cmbPorts.SelectedIndex = 0;
         }
 
-        private void btnRead_Click(object sender, RoutedEventArgs e)
+        private void btnStop_Click(object sender, RoutedEventArgs e)
         {
-            string read_Serial_Data = getStringfromSerialPort();
+            btnStart.IsEnabled = true;
+            btnStop.IsEnabled = false;
+            _reading = false;
+
+            if (this.Port.IsOpen)
+            {
+                Port.Close();
+            }
+            //string read_Serial_Data = getStringfromSerialPort();
         }
 
         private string getStringfromSerialPort()
         {
             //throw new NotImplementedException();
-            string retString = port.ReadLine();
+            string retString = Port.ReadLine();
             return "";
         }
 
         private void DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
         }
-        public void Write()
-        {
-            string Dateiname;
-            Dateiname = DateTime.Now.ToString().Replace('.', '_');
-            Dateiname = Dateiname.Replace(':', '_') + ".txt";
-            
-            Dateiname = AppDomain.CurrentDomain.BaseDirectory + Dateiname;
-            StreamWriter tmpLog = File.AppendText(Dateiname);
-            while (_continue)
-            {
-                if (_buffer.Count > 0)
-                {
-                    try
-                    {
-                        tmpLog.WriteLine(_buffer.First().ToString());
-                        _buffer.RemoveAt(0);
 
-                        //Thread.Sleep(1000);
-                        tmpLog.Flush();
-                    }
-                    catch (TimeoutException)
-                    {
-                        Debug.WriteLine("Could not write to file");
-                    }
-                }
-            }
-            tmpLog.Close();
-        }
-        public void Read()
+        private void Write(string message)
         {
-            while (_continue)
+            Measurement data = new Measurement()
+            {
+                Temperature = float.Parse(message),
+                Date = DateTime.Now
+            };
+
+            var location = ctx.Locations.SingleOrDefault(x => x.Name == txtStandort.Text) ?? new Location()
+            {
+                Name = txtStandort.Text
+            };
+
+            var position =
+                ctx.Positions.SingleOrDefault(x => x.Room == txtRaum.Text && x.PcNumber == txtPCName.Text) ??
+                new Position()
+                {
+                    Room = txtRaum.Text,
+                    PcNumber = txtPCName.Text
+                };
+
+            data.Position = position;
+            data.Position.Location = location;
+
+            ctx.Measurements.Add(data);
+            ctx.SaveChanges();
+        }
+
+
+
+        private void Read()
+        {
+            while (_reading)
             {
                 try
                 {
-                    string message = port.ReadLine();
-                    TemperaturDaten data = new TemperaturDaten()
+                    string message = Port.ReadLine();
+
+                    if (!string.IsNullOrEmpty(message))
                     {
-                        Temperatur = decimal.Parse(message.Remove(message.Length - 1).Replace(".", ",")),
-                        Datum = DateTime.Now
+                        Write(message);
 
-                    };
-                    Console.WriteLine(message);
-                    _buffer.Add(data);
-
-                    //Thread.Sleep(1000);
+                        Console.WriteLine(message);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -182,31 +190,30 @@ namespace Serial_Client
             }
         }
 
-
         private void btnTestWerte_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxButton button = MessageBoxButton.YesNoCancel;
-            if (MessageBox.Show("Sicher, dass 100000 Datensätze in die Datenbank geschrieben werden sollen?", "Sicher?", button) == MessageBoxResult.OK)
-            {
-                db.Connection.Open();
-                try
-                {
-                    string query = $"delete from {db.Table}";
-                    SqlCommand cmd = new SqlCommand(query, db.Connection);
-                    cmd.ExecuteNonQuery();
+            //MessageBoxButton button = MessageBoxButton.YesNoCancel;
+            //if (MessageBox.Show("Sicher, dass 100000 Datensätze in die Datenbank geschrieben werden sollen?", "Sicher?", button) == MessageBoxResult.OK)
+            //{
+            //    db.Connection.Open();
+            //    try
+            //    {
+            //        string query = $"delete from {db.Table}";
+            //        SqlCommand cmd = new SqlCommand(query, db.Connection);
+            //        cmd.ExecuteNonQuery();
 
-                    TestingData test = new TestingData(100000);
-                    test.CreateTestData();
+            //        TestingData test = new TestingData(100000);
+            //        test.CreateTestData();
 
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    throw;
-                }
-                finally { db.Connection.Close(); }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        MessageBox.Show(ex.Message);
+            //        throw;
+            //    }
+            //    finally { db.Connection.Close(); }
 
-            }
+            //}
         }
     }
 }

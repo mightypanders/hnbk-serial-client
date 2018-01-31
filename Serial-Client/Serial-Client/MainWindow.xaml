@@ -14,8 +14,8 @@
         </Grid.ColumnDefinitions>
         <ComboBox x:Name="cmbPorts" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,10,0,0"/>
         <TextBox x:Name="txtDBAdress" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,218,0,0" Text="sven.tech"/>
-        <Button x:Name="btnRead" Grid.Column="0" Height="25" Content="Read" VerticalAlignment="Bottom" Click="btnRead_Click"/>
-        <Button x:Name="btnOpenPort" Grid.Column="0" Height="25" Content="Open Port" VerticalAlignment="Bottom" Margin="0,0,0,30" Click="btnOpenPort_Click"/>
+        <Button x:Name="btnStop" Grid.Column="0" Height="25" Content="Stop" VerticalAlignment="Bottom" Click="btnStop_Click" IsEnabled="False"/>
+        <Button x:Name="btnStart" Grid.Column="0" Height="25" Content="Start" VerticalAlignment="Bottom" Margin="0,0,0,30" Click="btnStart_Click"/>
         <DataGrid x:Name="grDB" Grid.Column="2" ItemsSource="{Binding}"/>
         <Button x:Name="btnTestWerte" Grid.Column="0" Height="25" VerticalAlignment="Bottom" Margin="0,0,0,60" Content="Testwerte generieren" Click="btnTestWerte_Click"/>
         <Button x:Name="btnFillgrid" Grid.Column="0" Height="25" VerticalAlignment="Bottom" Margin="0,0,0,90" Content="Fill Grid" Click="btnFillgrid_Click"/>
@@ -32,7 +32,9 @@
         <TextBox x:Name="txtPCName" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,271,0,0"/>
         <Label Content="Rechnername" HorizontalAlignment="Left" Margin="10,244,0,0" VerticalAlignment="Top"/>
         <Label Content="Datenbank URL" HorizontalAlignment="Left" Margin="10,192,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtPCName_Copy" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,324,0,0"/>
-        <Label Content="Rechnername" HorizontalAlignment="Left" Margin="10,297,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtStandort" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,324,0,0"/>
+        <Label Content="Standort" HorizontalAlignment="Left" Margin="10,297,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtRaum" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,380,0,0"/>
+        <Label Content="Raum" HorizontalAlignment="Left" Margin="10,350,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

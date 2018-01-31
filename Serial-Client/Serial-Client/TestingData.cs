@@ -36,7 +36,6 @@ namespace Testdaten
         public void CreateTestData()
         {
             Db.Connection.ConnectionString = $"Data Source={Db.ServerName};Initial Catalog={Db.Database};User id={Db.User};Password={Db.Password};";
-            string parameter = "";
 
             if (Date.LastDateOfDatabase)
             {
