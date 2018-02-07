@@ -33,6 +33,11 @@ namespace Serial_Client
         private HnbkContext ctx = new HnbkContext();
         //private List<TemperaturDaten> _buffer;
         public SerialPort Port;
+        public Thread ReadFromSerial;
+        public Thread IterateOverBuffer;
+
+        public List<string> fifobuffer = new List<string>();
+
         public MainWindow()
         {
             var bla = PortOptions.DataBits;
@@ -44,8 +49,6 @@ namespace Serial_Client
 
         private void FillBoxes()
         {
-            this.cmbParity.ItemsSource = Enum.GetValues(typeof(Parity)).Cast<Parity>();
-            this.cmbParity.SelectedValue = Parity.Even;
             this.cmbHandshake.ItemsSource = Enum.GetValues(typeof(Handshake)).Cast<Handshake>();
             this.cmbHandshake.SelectedValue = Handshake.None;
             this.cmbBaud.ItemsSource = PortOptions.BaudRateList;
@@ -61,20 +64,25 @@ namespace Serial_Client
             btnStart.IsEnabled = false;
             btnStop.IsEnabled = true;
             _reading = true;
+            portOptionsZuweisen();
+            ReadFromSerial = new Thread(this.Read);
+            IterateOverBuffer = new Thread(this.IterateOverList);
+            ReadFromSerial.Start();
+            IterateOverBuffer.Start();
+        }
 
+        private void portOptionsZuweisen()
+        {
             if (!this.Port.IsOpen)
             {
                 PortOptions.PortName = this.cmbPorts.SelectedValue.ToString();
                 PortOptions.BaudRate = int.Parse(this.cmbBaud.SelectedValue.ToString());
                 PortOptions.Handshake = (Handshake)this.cmbHandshake.SelectedItem;
-                PortOptions.Parity = (Parity)this.cmbParity.SelectedItem;
                 PortOptions.StopBits = (StopBits)this.cmbStop.SelectedItem;
                 PortOptions.DataBits = int.Parse(this.cmbDatabit.SelectedValue.ToString());
                 Port = InitPort();
                 Port.Open();
             }
-
-            Read();
         }
 
         private SerialPort InitPort()
@@ -84,7 +92,6 @@ namespace Serial_Client
             port.DataBits = PortOptions.DataBits;
             port.Handshake = PortOptions.Handshake;
             port.BaudRate = PortOptions.BaudRate;
-            port.Parity = PortOptions.Parity;
             port.StopBits = PortOptions.StopBits;
             port.DataReceived += new SerialDataReceivedEventHandler(this.DataReceived);
             return port;
@@ -129,9 +136,8 @@ namespace Serial_Client
 
         private string getStringfromSerialPort()
         {
-            //throw new NotImplementedException();
-            string retString = Port.ReadLine();
-            return "";
+            var str = Port.ReadLine().Replace("\r","");
+            return str;
         }
 
         private void DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -142,7 +148,7 @@ namespace Serial_Client
         {
             Measurement data = new Measurement()
             {
-                Temperature = float.Parse(message),
+                Temperature = float.Parse(message.Replace(".",",")),
                 Date = DateTime.Now
             };
 
@@ -166,21 +172,33 @@ namespace Serial_Client
             ctx.SaveChanges();
         }
 
+        private void IterateOverList()
+        {
+            while (true)
+            {
+                if (fifobuffer.Count > 0)
+                {
+                    //Dispatcher.Invoke(DispatcherPriority.Normal,new DispatcherdDelegate (Write(fifobuffer[0])));
+                    Write(fifobuffer[0]);
+                    fifobuffer.RemoveAt(0);
+                }
+
+            }
+        }
 
 
         private void Read()
         {
+            string message = "";
             while (_reading)
             {
                 try
                 {
-                    string message = Port.ReadLine();
-
+                        message = getStringfromSerialPort();
                     if (!string.IsNullOrEmpty(message))
                     {
-                        Write(message);
-
-                        Console.WriteLine(message);
+                        fifobuffer.Add(message);
+                        //Write(message);
                     }
                 }
                 catch (Exception e)

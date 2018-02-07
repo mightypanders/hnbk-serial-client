@@ -13,28 +13,26 @@
             <ColumnDefinition x:Name="Right"/>
         </Grid.ColumnDefinitions>
         <ComboBox x:Name="cmbPorts" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,10,0,0"/>
-        <TextBox x:Name="txtDBAdress" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,218,0,0" Text="sven.tech"/>
+        <TextBox x:Name="txtDBAdress" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,189,0,0" Text="sven.tech"/>
         <Button x:Name="btnStop" Grid.Column="0" Height="25" Content="Stop" VerticalAlignment="Bottom" Click="btnStop_Click" IsEnabled="False"/>
         <Button x:Name="btnStart" Grid.Column="0" Height="25" Content="Start" VerticalAlignment="Bottom" Margin="0,0,0,30" Click="btnStart_Click"/>
         <DataGrid x:Name="grDB" Grid.Column="2" ItemsSource="{Binding}"/>
         <Button x:Name="btnTestWerte" Grid.Column="0" Height="25" VerticalAlignment="Bottom" Margin="0,0,0,60" Content="Testwerte generieren" Click="btnTestWerte_Click"/>
         <Button x:Name="btnFillgrid" Grid.Column="0" Height="25" VerticalAlignment="Bottom" Margin="0,0,0,90" Content="Fill Grid" Click="btnFillgrid_Click"/>
-        <ComboBox x:Name="cmbParity" HorizontalAlignment="Left" Margin="81,44,0,0" VerticalAlignment="Top" Width="120"/>
-        <ComboBox x:Name="cmbStop" HorizontalAlignment="Left" Margin="81,75,0,0" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Parity" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
-        <Label Content="StopBits" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cmbHandshake" HorizontalAlignment="Left" Margin="81,106,0,0" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Handshake" HorizontalAlignment="Left" Margin="10,102,0,0" VerticalAlignment="Top"/>
-        <Label Content="Baudrate" HorizontalAlignment="Left" Margin="10,133,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cmbBaud" HorizontalAlignment="Left" Margin="81,137,0,0" VerticalAlignment="Top" Width="120"/>
-        <ComboBox x:Name="cmbDatabit" HorizontalAlignment="Left" Margin="81,164,0,0" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Databits" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtPCName" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,271,0,0"/>
-        <Label Content="Rechnername" HorizontalAlignment="Left" Margin="10,244,0,0" VerticalAlignment="Top"/>
-        <Label Content="Datenbank URL" HorizontalAlignment="Left" Margin="10,192,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtStandort" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,324,0,0"/>
-        <Label Content="Standort" HorizontalAlignment="Left" Margin="10,297,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtRaum" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,380,0,0"/>
-        <Label Content="Raum" HorizontalAlignment="Left" Margin="10,350,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbStop" HorizontalAlignment="Left" Margin="81,46,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="StopBits" HorizontalAlignment="Left" Margin="10,42,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbHandshake" HorizontalAlignment="Left" Margin="81,77,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Handshake" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top"/>
+        <Label Content="Baudrate" HorizontalAlignment="Left" Margin="10,104,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cmbBaud" HorizontalAlignment="Left" Margin="81,108,0,0" VerticalAlignment="Top" Width="120"/>
+        <ComboBox x:Name="cmbDatabit" HorizontalAlignment="Left" Margin="81,135,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Databits" HorizontalAlignment="Left" Margin="10,131,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtPCName" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,242,0,0" Text="WS01"/>
+        <Label Content="Rechnername" HorizontalAlignment="Left" Margin="10,215,0,0" VerticalAlignment="Top"/>
+        <Label Content="Datenbank URL" HorizontalAlignment="Left" Margin="10,163,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtStandort" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,295,0,0" Text="Frankenstraße"/>
+        <Label Content="Standort" HorizontalAlignment="Left" Margin="10,268,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtRaum" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,351,0,0" Text="HNN000"/>
+        <Label Content="Raum" HorizontalAlignment="Left" Margin="10,321,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
