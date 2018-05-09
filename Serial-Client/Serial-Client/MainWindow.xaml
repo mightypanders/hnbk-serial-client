@@ -37,11 +37,11 @@
             <TabItem Header="Datenbank">
                 <Grid Background="White">
                     <TextBox x:Name="txtDBAdress" Height="25" VerticalAlignment="Top" Margin="0,31,4,0" Text="sven.tech"/>
-                    <TextBox x:Name="txtPCName" Height="25" VerticalAlignment="Top" Margin="0,84,4,0" Text="WS01"/>
+                    <TextBox x:Name="txtPCName" Height="25" VerticalAlignment="Top" Margin="0,84,4,0" Text="WS01" TextChanged="txtName_TextChanged"/>
                     <Label Content="Rechnername" HorizontalAlignment="Left" Margin="0,57,0,0" VerticalAlignment="Top" Width="191"/>
-                    <TextBox x:Name="txtStandort" Height="25" VerticalAlignment="Top" Margin="0,137,4,0" Text="Frankenstraße"/>
+                    <TextBox x:Name="txtStandort" Height="25" VerticalAlignment="Top" Margin="0,137,4,0" Text="Frankenstraße" TextChanged="txtLocation_TextChanged"/>
                     <Label Content="Standort" HorizontalAlignment="Left" Margin="0,110,0,0" VerticalAlignment="Top" Width="191"/>
-                    <TextBox x:Name="txtRaum" Height="25" VerticalAlignment="Top" Margin="0,193,4,0" Text="HNN000"/>
+                    <TextBox x:Name="txtRaum" Height="25" VerticalAlignment="Top" Margin="0,193,4,0" Text="HNN000" TextChanged="txtRoom_TextChanged"/>
                     <Label Content="Raum" HorizontalAlignment="Left" Margin="0,163,0,0" VerticalAlignment="Top" Width="191"/>
                     <Label Content="Datenbank URL" HorizontalAlignment="Left" VerticalAlignment="Top" Width="191"/>
                 </Grid>

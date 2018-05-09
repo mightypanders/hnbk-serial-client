@@ -39,6 +39,9 @@ namespace Serial_Client
         public List<string> fifobuffer = new List<string>();
 
         public int ThreadInterval { get => _ThreadInterval; set => _ThreadInterval = value; }
+        public string txtLocationString = "";
+        public string txtRoomString = "";
+        public string txtNameString = "";
 
         public MainWindow()
         {
@@ -142,7 +145,18 @@ namespace Serial_Client
                 Port.Close();
             }
         }
-
+        public void txtLocation_TextChanged(object sender, EventArgs e)
+        {
+            txtLocationString = txtStandort.Text;
+        }
+        public void txtRoom_TextChanged(object sender, EventArgs e)
+        {
+            txtRoomString = txtRaum.Text;
+        }
+        public void txtName_TextChanged(object sender, EventArgs e)
+        {
+            txtNameString = txtPCName.Text;
+        }
         private string getStringfromSerialPort()
         {
             var str = Port.ReadLine().Replace("\r", "");
@@ -156,25 +170,26 @@ namespace Serial_Client
                 Temperature = float.Parse(message.Replace(".", ",")),
                 Date = DateTime.Now
             };
-
-            var location = ctx.Locations.SingleOrDefault(x => x.Name == txtStandort.Text) ?? new Location()
+            HnbkContext context = new HnbkContext();
+            var location = context.Locations.FirstOrDefault(x => x.Name == txtLocationString) ?? new Location()
             {
-                Name = txtStandort.Text
+                Name = txtLocationString
             };
 
             var position =
-                ctx.Positions.SingleOrDefault(x => x.Room == txtRaum.Text && x.PcNumber == txtPCName.Text) ??
+                context.Positions.SingleOrDefault(x => x.Room == txtRoomString && x.PcNumber == txtNameString) ??
                 new Position()
                 {
-                    Room = txtRaum.Text,
-                    PcNumber = txtPCName.Text
+                    Room = txtRoomString,
+                    PcNumber = txtNameString
                 };
 
             data.Position = position;
             data.Position.Location = location;
 
-            ctx.Measurements.Add(data);
-            ctx.SaveChanges();
+            context.Measurements.Add(data);
+            context.SaveChanges();
+            //FillGrid();
         }
 
         private void IterateOverList()
