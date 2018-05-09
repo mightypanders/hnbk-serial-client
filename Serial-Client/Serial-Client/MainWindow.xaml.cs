@@ -31,12 +31,14 @@ namespace Serial_Client
     {
         private bool _reading = false;
         private HnbkContext ctx = new HnbkContext();
-        //private List<TemperaturDaten> _buffer;
+        private int _ThreadInterval = 1;
+
         public SerialPort Port;
         public Thread ReadFromSerial;
         public Thread IterateOverBuffer;
-
         public List<string> fifobuffer = new List<string>();
+
+        public int ThreadInterval { get => _ThreadInterval; set => _ThreadInterval = value; }
 
         public MainWindow()
         {
@@ -45,6 +47,9 @@ namespace Serial_Client
             InitializeComponent();
             ListAllComPorts();
             FillBoxes();
+#if (DEBUG)
+            this.btnTestWerte.Visibility = Visibility.Visible;
+#endif
         }
 
         private void FillBoxes()
@@ -64,9 +69,12 @@ namespace Serial_Client
             btnStart.IsEnabled = false;
             btnStop.IsEnabled = true;
             _reading = true;
+
             portOptionsZuweisen();
+
             ReadFromSerial = new Thread(this.Read);
             IterateOverBuffer = new Thread(this.IterateOverList);
+
             ReadFromSerial.Start();
             IterateOverBuffer.Start();
         }
@@ -87,13 +95,14 @@ namespace Serial_Client
 
         private SerialPort InitPort()
         {
-            SerialPort port = new SerialPort();
-            port.PortName = PortOptions.PortName;
-            port.DataBits = PortOptions.DataBits;
-            port.Handshake = PortOptions.Handshake;
-            port.BaudRate = PortOptions.BaudRate;
-            port.StopBits = PortOptions.StopBits;
-            port.DataReceived += new SerialDataReceivedEventHandler(this.DataReceived);
+            SerialPort port = new SerialPort
+            {
+                PortName = PortOptions.PortName,
+                DataBits = PortOptions.DataBits,
+                Handshake = PortOptions.Handshake,
+                BaudRate = PortOptions.BaudRate,
+                StopBits = PortOptions.StopBits
+            };
             return port;
         }
 
@@ -101,6 +110,7 @@ namespace Serial_Client
         {
             FillGrid();
         }
+
         private void FillGrid()
         {
             this.grDB.DataContext = null;
@@ -131,24 +141,19 @@ namespace Serial_Client
             {
                 Port.Close();
             }
-            //string read_Serial_Data = getStringfromSerialPort();
         }
 
         private string getStringfromSerialPort()
         {
-            var str = Port.ReadLine().Replace("\r","");
+            var str = Port.ReadLine().Replace("\r", "");
             return str;
-        }
-
-        private void DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
         }
 
         private void Write(string message)
         {
             Measurement data = new Measurement()
             {
-                Temperature = float.Parse(message.Replace(".",",")),
+                Temperature = float.Parse(message.Replace(".", ",")),
                 Date = DateTime.Now
             };
 
@@ -182,10 +187,9 @@ namespace Serial_Client
                     Write(fifobuffer[0]);
                     fifobuffer.RemoveAt(0);
                 }
-
+                Thread.Sleep(100);
             }
         }
-
 
         private void Read()
         {
@@ -194,7 +198,7 @@ namespace Serial_Client
             {
                 try
                 {
-                        message = getStringfromSerialPort();
+                    message = getStringfromSerialPort();
                     if (!string.IsNullOrEmpty(message))
                     {
                         fifobuffer.Add(message);
@@ -205,6 +209,7 @@ namespace Serial_Client
                 {
                     Debug.WriteLine(e.Message);
                 }
+                Thread.Sleep(ThreadInterval * 1000);
             }
         }
 
@@ -232,6 +237,21 @@ namespace Serial_Client
             //    finally { db.Connection.Close(); }
 
             //}
+        }
+
+        private void txtInterval_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (int.TryParse(txtInterval.Text, out int value))
+                {
+                    ThreadInterval = value;
+                }
+                else
+                {
+                    txtInterval.Text = "";
+                }
+            }
         }
     }
 }

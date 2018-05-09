@@ -5,34 +5,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Serial_Client"
         mc:Ignorable="d"
-        Title="Window1" Height="594" Width="500">
+        Title="Window1" Height="594" Width="500"
+        SizeToContent="Width">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="201" x:Name="Left">
             </ColumnDefinition>
             <ColumnDefinition x:Name="Right"/>
         </Grid.ColumnDefinitions>
-        <ComboBox x:Name="cmbPorts" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,10,0,0"/>
-        <TextBox x:Name="txtDBAdress" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,189,0,0" Text="sven.tech"/>
         <Button x:Name="btnStop" Grid.Column="0" Height="25" Content="Stop" VerticalAlignment="Bottom" Click="btnStop_Click" IsEnabled="False"/>
         <Button x:Name="btnStart" Grid.Column="0" Height="25" Content="Start" VerticalAlignment="Bottom" Margin="0,0,0,30" Click="btnStart_Click"/>
-        <DataGrid x:Name="grDB" Grid.Column="2" ItemsSource="{Binding}"/>
-        <Button x:Name="btnTestWerte" Grid.Column="0" Height="25" VerticalAlignment="Bottom" Margin="0,0,0,60" Content="Testwerte generieren" Click="btnTestWerte_Click"/>
-        <Button x:Name="btnFillgrid" Grid.Column="0" Height="25" VerticalAlignment="Bottom" Margin="0,0,0,90" Content="Fill Grid" Click="btnFillgrid_Click"/>
-        <ComboBox x:Name="cmbStop" HorizontalAlignment="Left" Margin="81,46,0,0" VerticalAlignment="Top" Width="120"/>
-        <Label Content="StopBits" HorizontalAlignment="Left" Margin="10,42,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cmbHandshake" HorizontalAlignment="Left" Margin="81,77,0,0" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Handshake" HorizontalAlignment="Left" Margin="10,73,0,0" VerticalAlignment="Top"/>
-        <Label Content="Baudrate" HorizontalAlignment="Left" Margin="10,104,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cmbBaud" HorizontalAlignment="Left" Margin="81,108,0,0" VerticalAlignment="Top" Width="120"/>
-        <ComboBox x:Name="cmbDatabit" HorizontalAlignment="Left" Margin="81,135,0,0" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Databits" HorizontalAlignment="Left" Margin="10,131,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtPCName" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,242,0,0" Text="WS01"/>
-        <Label Content="Rechnername" HorizontalAlignment="Left" Margin="10,215,0,0" VerticalAlignment="Top"/>
-        <Label Content="Datenbank URL" HorizontalAlignment="Left" Margin="10,163,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtStandort" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,295,0,0" Text="Frankenstraße"/>
-        <Label Content="Standort" HorizontalAlignment="Left" Margin="10,268,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtRaum" Grid.Column="0" Height="25" VerticalAlignment="Top" Margin="0,351,0,0" Text="HNN000"/>
-        <Label Content="Raum" HorizontalAlignment="Left" Margin="10,321,0,0" VerticalAlignment="Top"/>
+        <DataGrid x:Name="grDB" ItemsSource="{Binding}" Grid.Column="1"/>
+        <Button x:Name="btnTestWerte" Grid.Column="0" Height="25" VerticalAlignment="Bottom" Margin="0,0,0,92" Content="Testwerte generieren" Click="btnTestWerte_Click" Visibility="Collapsed"/>
+        <Button x:Name="btnFillgrid" Grid.Column="0" Height="25" VerticalAlignment="Bottom" Margin="0,0,0,61" Content="Fill Grid" Click="btnFillgrid_Click"/>
+        <TabControl HorizontalAlignment="Left" Height="254" VerticalAlignment="Top" Width="201">
+            <TabItem Header="Arduino">
+                <Grid Background="White">
+                    <ComboBox x:Name="cmbPorts" Height="25" VerticalAlignment="Top" Margin="0,2,0,0" HorizontalContentAlignment="Center"/>
+                    <ComboBox x:Name="cmbStop" HorizontalAlignment="Left" Margin="79,38,0,0" VerticalAlignment="Top" Width="116"/>
+                    <Label Content="StopBits" HorizontalAlignment="Left" Margin="0,34,0,0" VerticalAlignment="Top" Width="79"/>
+                    <ComboBox x:Name="cmbHandshake" HorizontalAlignment="Left" Margin="79,69,0,0" VerticalAlignment="Top" Width="116"/>
+                    <Label Content="Handshake" HorizontalAlignment="Left" Margin="0,65,0,0" VerticalAlignment="Top" Width="79"/>
+                    <Label Content="Baudrate" HorizontalAlignment="Left" Margin="0,96,0,0" VerticalAlignment="Top" Width="79"/>
+                    <ComboBox x:Name="cmbBaud" HorizontalAlignment="Left" Margin="79,100,0,0" VerticalAlignment="Top" Width="116"/>
+                    <ComboBox x:Name="cmbDatabit" HorizontalAlignment="Left" Margin="79,131,0,0" VerticalAlignment="Top" Width="116"/>
+                    <Label Content="Databits" HorizontalAlignment="Left" Margin="0,127,0,0" VerticalAlignment="Top" Width="79"/>
+                    <Label Content="Intervall" HorizontalAlignment="Left" Margin="0,158,0,0" VerticalAlignment="Top" Width="79"/>
+                    <TextBox x:Name="txtInterval" HorizontalAlignment="Left" Height="23" Margin="79,162,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="116" MaxLines="1" Text="5" KeyDown="txtInterval_KeyDown"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Datenbank">
+                <Grid Background="White">
+                    <TextBox x:Name="txtDBAdress" Height="25" VerticalAlignment="Top" Margin="0,31,4,0" Text="sven.tech"/>
+                    <TextBox x:Name="txtPCName" Height="25" VerticalAlignment="Top" Margin="0,84,4,0" Text="WS01"/>
+                    <Label Content="Rechnername" HorizontalAlignment="Left" Margin="0,57,0,0" VerticalAlignment="Top" Width="191"/>
+                    <TextBox x:Name="txtStandort" Height="25" VerticalAlignment="Top" Margin="0,137,4,0" Text="Frankenstraße"/>
+                    <Label Content="Standort" HorizontalAlignment="Left" Margin="0,110,0,0" VerticalAlignment="Top" Width="191"/>
+                    <TextBox x:Name="txtRaum" Height="25" VerticalAlignment="Top" Margin="0,193,4,0" Text="HNN000"/>
+                    <Label Content="Raum" HorizontalAlignment="Left" Margin="0,163,0,0" VerticalAlignment="Top" Width="191"/>
+                    <Label Content="Datenbank URL" HorizontalAlignment="Left" VerticalAlignment="Top" Width="191"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
