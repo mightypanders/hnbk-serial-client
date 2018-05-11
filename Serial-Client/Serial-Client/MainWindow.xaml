@@ -4,48 +4,91 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Serial_Client"
+        xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
         mc:Ignorable="d"
         Title="Window1" Height="594" Width="500"
         SizeToContent="Width">
+    <Window.DataContext>
+        <Binding Path="Main" Source="{StaticResource Locator}"/>
+    </Window.DataContext>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="b2v" />
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="201" x:Name="Left">
+            <ColumnDefinition Width="auto" x:Name="Left">
             </ColumnDefinition>
-            <ColumnDefinition x:Name="Right"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="btnStop" Grid.Column="0" Height="25" Content="Stop" VerticalAlignment="Bottom" Click="btnStop_Click" IsEnabled="False"/>
-        <Button x:Name="btnStart" Grid.Column="0" Height="25" Content="Start" VerticalAlignment="Bottom" Margin="0,0,0,30" Click="btnStart_Click"/>
-        <DataGrid x:Name="grDB" ItemsSource="{Binding}" Grid.Column="1"/>
-        <Button x:Name="btnTestWerte" Grid.Column="0" Height="25" VerticalAlignment="Bottom" Margin="0,0,0,92" Content="Testwerte generieren" Click="btnTestWerte_Click" Visibility="Collapsed"/>
-        <Button x:Name="btnFillgrid" Grid.Column="0" Height="25" VerticalAlignment="Bottom" Margin="0,0,0,61" Content="Fill Grid" Click="btnFillgrid_Click"/>
-        <TabControl HorizontalAlignment="Left" Height="254" VerticalAlignment="Top" Width="201">
-            <TabItem Header="Arduino">
-                <Grid Background="White">
-                    <ComboBox x:Name="cmbPorts" Height="25" VerticalAlignment="Top" Margin="0,2,0,0" HorizontalContentAlignment="Center"/>
-                    <ComboBox x:Name="cmbStop" HorizontalAlignment="Left" Margin="79,38,0,0" VerticalAlignment="Top" Width="116"/>
-                    <Label Content="StopBits" HorizontalAlignment="Left" Margin="0,34,0,0" VerticalAlignment="Top" Width="79"/>
-                    <ComboBox x:Name="cmbHandshake" HorizontalAlignment="Left" Margin="79,69,0,0" VerticalAlignment="Top" Width="116"/>
-                    <Label Content="Handshake" HorizontalAlignment="Left" Margin="0,65,0,0" VerticalAlignment="Top" Width="79"/>
-                    <Label Content="Baudrate" HorizontalAlignment="Left" Margin="0,96,0,0" VerticalAlignment="Top" Width="79"/>
-                    <ComboBox x:Name="cmbBaud" HorizontalAlignment="Left" Margin="79,100,0,0" VerticalAlignment="Top" Width="116"/>
-                    <ComboBox x:Name="cmbDatabit" HorizontalAlignment="Left" Margin="79,131,0,0" VerticalAlignment="Top" Width="116"/>
-                    <Label Content="Databits" HorizontalAlignment="Left" Margin="0,127,0,0" VerticalAlignment="Top" Width="79"/>
-                    <Label Content="Intervall" HorizontalAlignment="Left" Margin="0,158,0,0" VerticalAlignment="Top" Width="79"/>
-                    <TextBox x:Name="txtInterval" HorizontalAlignment="Left" Height="23" Margin="79,162,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="116" MaxLines="1" Text="5" KeyDown="txtInterval_KeyDown"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Datenbank">
-                <Grid Background="White">
-                    <TextBox x:Name="txtDBAdress" Height="25" VerticalAlignment="Top" Margin="0,31,4,0" Text="sven.tech"/>
-                    <TextBox x:Name="txtPCName" Height="25" VerticalAlignment="Top" Margin="0,84,4,0" Text="WS01" TextChanged="txtName_TextChanged"/>
-                    <Label Content="Rechnername" HorizontalAlignment="Left" Margin="0,57,0,0" VerticalAlignment="Top" Width="191"/>
-                    <TextBox x:Name="txtStandort" Height="25" VerticalAlignment="Top" Margin="0,137,4,0" Text="Frankenstraße" TextChanged="txtLocation_TextChanged"/>
-                    <Label Content="Standort" HorizontalAlignment="Left" Margin="0,110,0,0" VerticalAlignment="Top" Width="191"/>
-                    <TextBox x:Name="txtRaum" Height="25" VerticalAlignment="Top" Margin="0,193,4,0" Text="HNN000" TextChanged="txtRoom_TextChanged"/>
-                    <Label Content="Raum" HorizontalAlignment="Left" Margin="0,163,0,0" VerticalAlignment="Top" Width="191"/>
-                    <Label Content="Datenbank URL" HorizontalAlignment="Left" VerticalAlignment="Top" Width="191"/>
-                </Grid>
-            </TabItem>
-        </TabControl>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <ListView x:Name="grDB" ItemsSource="{Binding TempDaten}" Grid.Column="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Temperatur" DisplayMemberBinding="{Binding Temperature}"/>
+                    <GridViewColumn Header="Rechner" DisplayMemberBinding="{Binding Position.PcNumber}"/>
+                    <GridViewColumn Header="Raum" DisplayMemberBinding="{Binding Position.Room}"/>
+                    <GridViewColumn Header="Standort" DisplayMemberBinding="{Binding Position.Location.Name}"/>
+                    <GridViewColumn Header="Datum" DisplayMemberBinding="{Binding Date}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
+            <TextBlock Text="Geladene Temperatur Werte: " VerticalAlignment="Center" Margin="5,0,5,0"/>
+            <TextBlock Text="{Binding TempDaten.Count}" VerticalAlignment="Center"/> 
+        </StackPanel>
+        
+        <DockPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" >
+            <StackPanel DockPanel.Dock="Bottom" >
+                <Button x:Name="btnTestWerte" Grid.Column="0" Margin="5" Height="40" Content="Testwerte generieren" Command="{Binding GenerateTestValues}" Visibility="{Binding Debug,Converter={StaticResource b2v}}"/>
+                <Button x:Name="btnFillgrid" Grid.Column="0" Margin="5" Height="40" Content="Fill Grid" Command="{Binding FillTable}"/>
+                <Button x:Name="btnStart" Grid.Column="0"  Margin="5" Height="40" Content="Start" Command="{Binding StartRead}"/>
+                <Button x:Name="btnStop" Grid.Column="0"  Margin="5" Height="40" Content="Stop" Command="{Binding StopRead}"/>
+            </StackPanel>
+            <TabControl HorizontalAlignment="Left"  VerticalAlignment="Top" DockPanel.Dock="Top">
+                <TabItem Header="Arduino">
+                    <Grid Background="White" Width="200">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <ComboBox x:Name="cmbPorts" Margin="5" Height="35" Grid.Column="0" Grid.ColumnSpan="2" SelectedItem="{Binding SelectedPort}" SelectedIndex="0" ItemsSource="{x:Static local:PortOptions.PortNames}" Grid.Row="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <ComboBox x:Name="cmbStop" Margin="5" Grid.Column="1" Grid.Row="1" SelectedItem="{Binding SelectedStopBits,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type ports:StopBits}}}" />
+                        <ComboBox x:Name="cmbHandshake" Margin="5" Grid.Column="1" Grid.Row="2" SelectedItem="{Binding SelectedHandshake,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type ports:Handshake}}}" />
+                        <ComboBox x:Name="cmbBaud" Margin="5" Grid.Column="1" Grid.Row="3" SelectedItem="{Binding SelectedBaudRate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{x:Static local:PortOptions.BaudRateList}"/>
+                        <ComboBox x:Name="cmbDatabit"  Margin="5" Grid.Column="1" Grid.Row="4" SelectedItem="{Binding SelectedDataBit,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{x:Static local:PortOptions.DataBitList}"/>
+                        <Label Content="StopBits" Grid.Column="0" Grid.Row="1"/>
+                        <Label Content="Handshake" Grid.Column="0" Grid.Row="2"/>
+                        <Label Content="Baudrate" Grid.Column="0" Grid.Row="3"/>
+                        <Label Content="Databits" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="4"/>
+                        <Label Content="Intervall" Grid.Column="0" Grid.Row="5" VerticalContentAlignment="Center"/>
+                        <TextBox x:Name="txtInterval" Margin="5" Grid.Column="1" Grid.Row="5" MaxLines="1" Text="{Binding Intervall,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" KeyDown="txtInterval_KeyDown"/>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Datenbank">
+                    <StackPanel Background="White" Width="200">
+                        <Label Content="Datenbank URL" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        <TextBox x:Name="txtDBAdress" Height="25" VerticalAlignment="Top" Text="{Binding DBUrl,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label Content="Rechnername" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        <TextBox x:Name="txtPCName" Height="25" VerticalAlignment="Top" Text="{Binding Rechner,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label Content="Standort" HorizontalAlignment="Left"  VerticalAlignment="Top" />
+                        <TextBox x:Name="txtStandort" Height="25" VerticalAlignment="Top"  Text="{Binding Standort,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label Content="Raum" HorizontalAlignment="Left"  />
+                        <TextBox x:Name="txtRaum" Height="25" VerticalAlignment="Top"  Text="{Binding Raum,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
     </Grid>
 </Window>
