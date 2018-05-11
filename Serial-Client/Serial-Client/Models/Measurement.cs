@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Serial_Client.Models
 {
-    class Measurement
+    public class Measurement
     {
         public int ID { get; set; }
         public DateTime Date { get; set; }

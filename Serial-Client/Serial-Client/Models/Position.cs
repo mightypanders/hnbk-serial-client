@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Serial_Client.Models
 {
-    class Position
+    public class Position
     {
         public int Id { get; set; }
         public string Room { get; set; }
