@@ -1,6 +1,7 @@
 ﻿<Window x:Class="Serial_Client.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Serial_Client"
@@ -14,6 +15,11 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="b2v" />
     </Window.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding Closing}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition MinWidth="200" />
@@ -37,6 +43,8 @@
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
             <TextBlock Text="Geladene Temperatur Werte: " VerticalAlignment="Center" Margin="5,0,5,0"/>
             <TextBlock Text="{Binding TempDaten.Count}" VerticalAlignment="Center"/>
+            <RadioButton IsChecked="{Binding Worker.Running,UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="{Binding Worker.WorkerState}"/>
         </StackPanel>
         <DockPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" >
             <StackPanel DockPanel.Dock="Bottom">

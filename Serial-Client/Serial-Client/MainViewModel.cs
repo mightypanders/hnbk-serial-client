@@ -19,38 +19,47 @@ namespace Serial_Client
         private HnbkContext ctx = new HnbkContext();
 
         private ObservableCollection<Models.Measurement> tempDaten;
+        public RelayCommand Closing { get; private set; }
         public RelayCommand StartRead { get; private set; }
         public RelayCommand StopRead { get; private set; }
         public RelayCommand FillTable { get; private set; }
         public RelayCommand GenerateTestValues { get; private set; }
-        private RWWorker worker;
         private void initButtonCommands()
         {
+            this.Closing = new RelayCommand(() => { doClosingCommand(); });
             this.StartRead = new RelayCommand(
                 () => { doStartReadCommand(); },
                 () =>
                 {
-                    if (worker != null)
-                        return !worker.Running;
+                    if (Worker != null)
+                        return !Worker.Running;
                     else return true;
 
                 });
-            this.StopRead = new RelayCommand(() => { doStopReadCommand(); },
+            this.StopRead = new RelayCommand(
+                () => { doStopReadCommand(); },
                 () =>
                 {
-                    if (worker != null)
-                        return worker.Running;
+                    if (Worker != null)
+                        return Worker.Running;
                     else
                         return false;
                 });
             this.FillTable = new RelayCommand(() => { Task.Run(() => doFillTableCommand()); });
             this.GenerateTestValues = new RelayCommand(() => { doGenerateTestValuesCommand(); }, () => { return !Running && Debug; });
         }
+
+        private void doClosingCommand()
+        {
+            doStopReadCommand();
+        }
+
         public MainViewModel()
         {
 #if DEBUG
             Debug = true;
 #endif
+            Worker = new RWWorker();
             tempDaten = new ObservableCollection<Models.Measurement>();
             initButtonCommands();
             Intervall = 5;
@@ -61,7 +70,6 @@ namespace Serial_Client
             Raum = "HNN000";
             Rechner = "PC01";
 
-            Running = false;
         }
 
         #region Commands
@@ -91,20 +99,22 @@ namespace Serial_Client
         private void doStartReadCommand()
         {
 
-            if (worker == null)
+            if (Worker == null)
             {
-                worker = new RWWorker();
-                worker.doWork();
+                Worker = new RWWorker();
+                Worker.Init();
+                Worker.doWork();
             }
             else
             {
-
+                Worker.Init();
+                Worker.doWork();
             }
         }
         private void doStopReadCommand()
         {
-            if (worker != null)
-                worker.stopWork();
+            if (Worker != null)
+                Worker.stopWork();
         }
         #endregion
 
@@ -119,6 +129,11 @@ namespace Serial_Client
                 tempDaten = value;
                 this.RaisePropertyChanged("TempDaten");
             }
+        }
+        public RWWorker Worker
+        {
+            get;
+            private set;
         }
         #endregion
 
@@ -243,8 +258,8 @@ namespace Serial_Client
         {
             get
             {
-                if (worker != null)
-                    return worker.Running;
+                if (Worker != null)
+                    return Worker.Running;
                 else
                     return false;
             }

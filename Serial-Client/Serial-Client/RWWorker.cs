@@ -19,6 +19,7 @@ namespace Serial_Client
         private SerialPort Port;
         public Thread ReadFromSerial;
         public Thread IterateOverBuffer;
+        private string _workerState;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -28,14 +29,19 @@ namespace Serial_Client
 
         public RWWorker()
         {
-            Port = InitPort();
+            this.Running = false;
+            this.WorkerState = "Stop";
             fifobuffer = new List<string>();
+        }
+        public void Init()
+        {
+            Port = InitPort();
         }
 
         public void doWork()
         {
-
             this.Running = true;
+            this.WorkerState = "Run";
             Port.Open();
             ReadFromSerial = new Thread(Read);
             IterateOverBuffer = new Thread(IterateOverList);
@@ -44,7 +50,19 @@ namespace Serial_Client
         }
         public void stopWork()
         {
+            this.WorkerState = "Stop";
             this.Running = false;
+        }
+        public string WorkerState
+        {
+            get => _workerState;
+            set
+            {
+                if (value == _workerState)
+                    return;
+                _workerState = value;
+                OnPropertyChanged("WorkerState");
+            }
         }
         public bool Running
         {
@@ -101,6 +119,7 @@ namespace Serial_Client
         }
         private string getStringfromSerialPort()
         {
+            Port.ReadTimeout = 100;
             var str = Port.ReadLine().Replace("\r", "");
             return str;
         }
