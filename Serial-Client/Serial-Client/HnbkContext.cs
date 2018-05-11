@@ -8,7 +8,7 @@ using Serial_Client.Models;
 
 namespace Serial_Client
 {
-    class HnbkContext : DbContext
+    public class HnbkContext : DbContext
     {
         public HnbkContext() : base("HnbkDBConnectionString")
         {
