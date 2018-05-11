@@ -16,8 +16,7 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" x:Name="Left">
-            </ColumnDefinition>
+            <ColumnDefinition MinWidth="200" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -37,58 +36,65 @@
         </ListView>
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
             <TextBlock Text="Geladene Temperatur Werte: " VerticalAlignment="Center" Margin="5,0,5,0"/>
-            <TextBlock Text="{Binding TempDaten.Count}" VerticalAlignment="Center"/> 
+            <TextBlock Text="{Binding TempDaten.Count}" VerticalAlignment="Center"/>
         </StackPanel>
-        
         <DockPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" >
-            <StackPanel DockPanel.Dock="Bottom" >
+            <StackPanel DockPanel.Dock="Bottom">
                 <Button x:Name="btnTestWerte" Grid.Column="0" Margin="5" Height="40" Content="Testwerte generieren" Command="{Binding GenerateTestValues}" Visibility="{Binding Debug,Converter={StaticResource b2v}}"/>
                 <Button x:Name="btnFillgrid" Grid.Column="0" Margin="5" Height="40" Content="Fill Grid" Command="{Binding FillTable}"/>
                 <Button x:Name="btnStart" Grid.Column="0"  Margin="5" Height="40" Content="Start" Command="{Binding StartRead}"/>
                 <Button x:Name="btnStop" Grid.Column="0"  Margin="5" Height="40" Content="Stop" Command="{Binding StopRead}"/>
             </StackPanel>
-            <TabControl HorizontalAlignment="Left"  VerticalAlignment="Top" DockPanel.Dock="Top">
+            <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <Expander Header="Arduino">
+                        <Grid  Width="200">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <ComboBox x:Name="cmbPorts" Margin="5" Height="35" Grid.Column="0" Grid.ColumnSpan="2" SelectedItem="{Binding SelectedPort}" SelectedIndex="0" ItemsSource="{x:Static local:PortOptions.PortNames}" Grid.Row="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                            <ComboBox x:Name="cmbStop" Margin="5" Grid.Column="1" Grid.Row="1" SelectedItem="{Binding SelectedStopBits,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type ports:StopBits}}}" />
+                            <ComboBox x:Name="cmbHandshake" Margin="5" Grid.Column="1" Grid.Row="2" SelectedItem="{Binding SelectedHandshake,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type ports:Handshake}}}" />
+                            <ComboBox x:Name="cmbBaud" Margin="5" Grid.Column="1" Grid.Row="3" SelectedItem="{Binding SelectedBaudRate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{x:Static local:PortOptions.BaudRateList}"/>
+                            <ComboBox x:Name="cmbDatabit"  Margin="5" Grid.Column="1" Grid.Row="4" SelectedItem="{Binding SelectedDataBit,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{x:Static local:PortOptions.DataBitList}"/>
+                            <Label Content="StopBits" Grid.Column="0" Grid.Row="1"/>
+                            <Label Content="Handshake" Grid.Column="0" Grid.Row="2"/>
+                            <Label Content="Baudrate" Grid.Column="0" Grid.Row="3"/>
+                            <Label Content="Databits" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="4"/>
+                            <Label Content="Intervall" Grid.Column="0" Grid.Row="5" VerticalContentAlignment="Center"/>
+                            <TextBox x:Name="txtInterval" Margin="5" Grid.Column="1" Grid.Row="5" MaxLines="1" Text="{Binding Intervall,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center"/>
+                        </Grid>
+                    </Expander>
+                    <Expander Header="Database">
+                        <StackPanel Width="200">
+                            <Label Content="Datenbank URL" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <TextBox x:Name="txtDBAdress" Height="25" VerticalAlignment="Top" Text="{Binding DBUrl,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Content="Rechnername" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <TextBox x:Name="txtPCName" Height="25" VerticalAlignment="Top" Text="{Binding Rechner,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Content="Standort" HorizontalAlignment="Left"  VerticalAlignment="Top" />
+                            <TextBox x:Name="txtStandort" Height="25" VerticalAlignment="Top"  Text="{Binding Standort,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Content="Raum" HorizontalAlignment="Left"  />
+                            <TextBox x:Name="txtRaum" Height="25" VerticalAlignment="Top"  Text="{Binding Raum,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </Expander>
+                </StackPanel>
+            </ScrollViewer>
+            <!--<TabControl HorizontalAlignment="Left"  VerticalAlignment="Top" DockPanel.Dock="Top">
                 <TabItem Header="Arduino">
-                    <Grid Background="White" Width="200">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="2*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <ComboBox x:Name="cmbPorts" Margin="5" Height="35" Grid.Column="0" Grid.ColumnSpan="2" SelectedItem="{Binding SelectedPort}" SelectedIndex="0" ItemsSource="{x:Static local:PortOptions.PortNames}" Grid.Row="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                        <ComboBox x:Name="cmbStop" Margin="5" Grid.Column="1" Grid.Row="1" SelectedItem="{Binding SelectedStopBits,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type ports:StopBits}}}" />
-                        <ComboBox x:Name="cmbHandshake" Margin="5" Grid.Column="1" Grid.Row="2" SelectedItem="{Binding SelectedHandshake,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={local:EnumBindingSource {x:Type ports:Handshake}}}" />
-                        <ComboBox x:Name="cmbBaud" Margin="5" Grid.Column="1" Grid.Row="3" SelectedItem="{Binding SelectedBaudRate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{x:Static local:PortOptions.BaudRateList}"/>
-                        <ComboBox x:Name="cmbDatabit"  Margin="5" Grid.Column="1" Grid.Row="4" SelectedItem="{Binding SelectedDataBit,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{x:Static local:PortOptions.DataBitList}"/>
-                        <Label Content="StopBits" Grid.Column="0" Grid.Row="1"/>
-                        <Label Content="Handshake" Grid.Column="0" Grid.Row="2"/>
-                        <Label Content="Baudrate" Grid.Column="0" Grid.Row="3"/>
-                        <Label Content="Databits" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="4"/>
-                        <Label Content="Intervall" Grid.Column="0" Grid.Row="5" VerticalContentAlignment="Center"/>
-                        <TextBox x:Name="txtInterval" Margin="5" Grid.Column="1" Grid.Row="5" MaxLines="1" Text="{Binding Intervall,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" KeyDown="txtInterval_KeyDown"/>
-                    </Grid>
                 </TabItem>
                 <TabItem Header="Datenbank">
-                    <StackPanel Background="White" Width="200">
-                        <Label Content="Datenbank URL" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                        <TextBox x:Name="txtDBAdress" Height="25" VerticalAlignment="Top" Text="{Binding DBUrl,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Content="Rechnername" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                        <TextBox x:Name="txtPCName" Height="25" VerticalAlignment="Top" Text="{Binding Rechner,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Content="Standort" HorizontalAlignment="Left"  VerticalAlignment="Top" />
-                        <TextBox x:Name="txtStandort" Height="25" VerticalAlignment="Top"  Text="{Binding Standort,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                        <Label Content="Raum" HorizontalAlignment="Left"  />
-                        <TextBox x:Name="txtRaum" Height="25" VerticalAlignment="Top"  Text="{Binding Raum,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                    </StackPanel>
                 </TabItem>
-            </TabControl>
+            </TabControl>-->
         </DockPanel>
     </Grid>
 </Window>

@@ -1,22 +1,30 @@
 ﻿using Serial_Client.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Serial_Client
 {
-    public class RWWorker
+    public class RWWorker : INotifyPropertyChanged
     {
         private bool running = false;
         private List<string> fifobuffer;
         private SerialPort Port;
         public Thread ReadFromSerial;
         public Thread IterateOverBuffer;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         public RWWorker()
         {
@@ -38,7 +46,17 @@ namespace Serial_Client
         {
             this.Running = false;
         }
-        public bool Running { get => running; set => running = value; }
+        public bool Running
+        {
+            get => running;
+            set
+            {
+                if (value == running)
+                    return;
+                running = value;
+                OnPropertyChanged("Running");
+            }
+        }
 
         private SerialPort InitPort()
         {

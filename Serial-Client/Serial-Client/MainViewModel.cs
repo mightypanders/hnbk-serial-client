@@ -1,11 +1,13 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 
 namespace Serial_Client
 {
@@ -24,9 +26,24 @@ namespace Serial_Client
         private RWWorker worker;
         private void initButtonCommands()
         {
-            this.StartRead = new RelayCommand(() => { doStartReadCommand(); }, () => { return !Running; });
-            this.StopRead = new RelayCommand(() => { doStopReadCommand(); }, () => { return Running; });
-            this.FillTable = new RelayCommand(() => { doFillTableCommand(); });
+            this.StartRead = new RelayCommand(
+                () => { doStartReadCommand(); },
+                () =>
+                {
+                    if (worker != null)
+                        return !worker.Running;
+                    else return true;
+
+                });
+            this.StopRead = new RelayCommand(() => { doStopReadCommand(); },
+                () =>
+                {
+                    if (worker != null)
+                        return worker.Running;
+                    else
+                        return false;
+                });
+            this.FillTable = new RelayCommand(() => { Task.Run(() => doFillTableCommand()); });
             this.GenerateTestValues = new RelayCommand(() => { doGenerateTestValuesCommand(); }, () => { return !Running && Debug; });
         }
         public MainViewModel()
@@ -50,14 +67,19 @@ namespace Serial_Client
         #region Commands
         private void doFillTableCommand()
         {
-            tempDaten.Clear();
-            DateTime compare = DateTime.Now.AddDays(-1);
-            var output = ctx.Measurements.Where(x => x.Date >= compare).ToList();
-            output.OrderBy(x => x.Date);
-            foreach (var item in output)
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
-                tempDaten.Add(item);
-            }
+                tempDaten.Clear();
+                DateTime compare = DateTime.Now.AddDays(-10);
+                var output = ctx.Measurements
+                    //.Where(x => x.Date >= compare)
+                    .ToList();
+                output.OrderBy(x => x.Date);
+                foreach (var item in output)
+                {
+                    tempDaten.Add(item);
+                }
+            });
         }
         private void doGenerateTestValuesCommand()
         {
@@ -219,7 +241,13 @@ namespace Serial_Client
         #region 
         public bool Running
         {
-            get => running;
+            get
+            {
+                if (worker != null)
+                    return worker.Running;
+                else
+                    return false;
+            }
             set
             {
                 if (value == running)
