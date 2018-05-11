@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Serial_Client;
+using Serial_Client.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -7,12 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Testdaten
+namespace Serial_Client
 {
     class TestingData
     {
         private int counter;
-        
+
         DataBase db = new DataBase();
         Temperature temperature = new Temperature();
         Brightness brightness = new Brightness();
@@ -112,7 +114,7 @@ namespace Testdaten
         public SqlConnection Connection { get => connection; set => connection = value; }
         public DataBase()
         {
-Connection.ConnectionString = $"Data Source={this.ServerName};Initial Catalog={this.Database};User id={this.User};Password={this.Password};";
+            Connection.ConnectionString = $"Data Source={this.ServerName};Initial Catalog={this.Database};User id={this.User};Password={this.Password};";
         }
     }
 
@@ -133,7 +135,6 @@ Connection.ConnectionString = $"Data Source={this.ServerName};Initial Catalog={t
         public int Increment { get => increment; set => increment = value; }
         public int Decrement { get => decrement; set => decrement = value; }
     }
-
 
     public class Brightness
     {
@@ -203,5 +204,50 @@ Connection.ConnectionString = $"Data Source={this.ServerName};Initial Catalog={t
         public DateTime StartDate { get => startDate; set => startDate = value; }
         public int IncrementMinutes { get => incrementMinutes; set => incrementMinutes = value; }
         public bool LastDateOfDatabase { get => lastDateOfDatabase; set => lastDateOfDatabase = value; }
+    }
+
+    public static class TestGenerator
+    {
+
+        public static void generate(HnbkContext ctx)
+        {
+            Random r = new Random();
+
+            var position = new Position()
+            {
+                Room = "HNNTest",
+                PcNumber = "4711"
+            };
+            var location = new Location()
+            {
+                Name = "Testraum"
+            };
+            for (int month = 1; month <= 12; month++)
+            {
+                for (int day = 1; day <= 28; day++)
+                {
+                    for (int hour = 0; hour < 24; hour++)
+                    {
+                        //for (int minute = 0; minute < 60; minute++)
+                        //{
+                        Measurement data = new Measurement();
+                        data.Temperature = (NextFloat(r));
+                        data.Date = new DateTime(2018, month, day, hour, 1, 0);
+                        data.Position = position;
+                        data.Position.Location = location;
+                        ctx.Measurements.Add(data);
+                        ctx.SaveChanges();
+                        //}
+                    }
+                }
+            }
+        }
+
+        static float NextFloat(Random random)
+        {
+            double mantissa = (random.NextDouble() * 2.0);
+            double exponent = random.Next(15, 30);
+            return (float)(mantissa + exponent);
+        }
     }
 }
