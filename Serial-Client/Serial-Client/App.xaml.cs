@@ -13,5 +13,9 @@ namespace Serial_Client
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+
+        }
     }
 }
