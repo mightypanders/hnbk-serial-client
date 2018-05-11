@@ -20,7 +20,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Serial_Client.Models;
-using Testdaten;
 
 namespace Serial_Client
 {
@@ -45,26 +44,26 @@ namespace Serial_Client
 
         public MainWindow()
         {
-            var bla = PortOptions.DataBits;
-            Port = InitPort();
-            InitializeComponent();
-            ListAllComPorts();
-            FillBoxes();
-#if (DEBUG)
-            this.btnTestWerte.Visibility = Visibility.Visible;
-#endif
+            //            var bla = PortOptions.DataBits;
+            //            Port = InitPort();
+            //            InitializeComponent();
+            //            ListAllComPorts();
+            //            FillBoxes();
+            //#if (DEBUG)
+            //            this.btnTestWerte.Visibility = Visibility.Visible;
+            //#endif
         }
 
         private void FillBoxes()
         {
-            this.cmbHandshake.ItemsSource = Enum.GetValues(typeof(Handshake)).Cast<Handshake>();
-            this.cmbHandshake.SelectedValue = Handshake.None;
-            this.cmbBaud.ItemsSource = PortOptions.BaudRateList;
-            this.cmbBaud.SelectedValue = 9600;
-            this.cmbStop.ItemsSource = Enum.GetValues(typeof(StopBits)).Cast<StopBits>();
-            this.cmbStop.SelectedValue = StopBits.One;
-            this.cmbDatabit.ItemsSource = PortOptions.DataBitList;
-            this.cmbDatabit.SelectedValue = 8;
+            //this.cmbHandshake.ItemsSource = Enum.GetValues(typeof(Handshake)).Cast<Handshake>();
+            //this.cmbHandshake.SelectedValue = Handshake.None;
+            //this.cmbBaud.ItemsSource = PortOptions.BaudRateList;
+            //this.cmbBaud.SelectedValue = 9600;
+            //this.cmbStop.ItemsSource = Enum.GetValues(typeof(StopBits)).Cast<StopBits>();
+            //this.cmbStop.SelectedValue = StopBits.One;
+            //this.cmbDatabit.ItemsSource = PortOptions.DataBitList;
+            //this.cmbDatabit.SelectedValue = 8;
         }
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
@@ -111,28 +110,28 @@ namespace Serial_Client
 
         private void btnFillgrid_Click(object sender, RoutedEventArgs e)
         {
-            FillGrid();
+            //FillGrid();
         }
 
-        private void FillGrid()
-        {
-            this.grDB.DataContext = null;
-            grDB.DataContext = ctx.Measurements.Select(x => new
-            {
-                Standort = x.Position.Location.Name,
-                Raum = x.Position.Room,
-                PC = x.Position.PcNumber,
-                Temperatur = x.Temperature,
-                Datum = x.Date
-            }).ToList();
-        }
+        //private void FillGrid()
+        //{
+        //    this.grDB.DataContext = null;
+        //    grDB.DataContext = ctx.Measurements.Select(x => new
+        //    {
+        //        Standort = x.Position.Location.Name,
+        //        Raum = x.Position.Room,
+        //        PC = x.Position.PcNumber,
+        //        Temperatur = x.Temperature,
+        //        Datum = x.Date
+        //    }).ToList();
+        //}
 
-        private void ListAllComPorts()
-        {
-            this.cmbPorts.ItemsSource = SerialPort.GetPortNames();
-            if (this.cmbPorts.Items.Count > 0)
-                this.cmbPorts.SelectedIndex = 0;
-        }
+        //private void ListAllComPorts()
+        //{
+        //    this.cmbPorts.ItemsSource = SerialPort.GetPortNames();
+        //    if (this.cmbPorts.Items.Count > 0)
+        //        this.cmbPorts.SelectedIndex = 0;
+        //}
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
@@ -147,15 +146,15 @@ namespace Serial_Client
         }
         public void txtLocation_TextChanged(object sender, EventArgs e)
         {
-            txtLocationString = txtStandort.Text;
+            //txtLocationString = txtStandort.Text;
         }
         public void txtRoom_TextChanged(object sender, EventArgs e)
         {
-            txtRoomString = txtRaum.Text;
+            //txtRoomString = txtRaum.Text;
         }
         public void txtName_TextChanged(object sender, EventArgs e)
         {
-            txtNameString = txtPCName.Text;
+            //txtNameString = txtPCName.Text;
         }
         private string getStringfromSerialPort()
         {
@@ -194,7 +193,7 @@ namespace Serial_Client
 
         private void IterateOverList()
         {
-            while (true)
+            while (_reading)
             {
                 if (fifobuffer.Count > 0)
                 {
@@ -230,43 +229,25 @@ namespace Serial_Client
 
         private void btnTestWerte_Click(object sender, RoutedEventArgs e)
         {
-            //MessageBoxButton button = MessageBoxButton.YesNoCancel;
-            //if (MessageBox.Show("Sicher, dass 100000 Datensätze in die Datenbank geschrieben werden sollen?", "Sicher?", button) == MessageBoxResult.OK)
-            //{
-            //    db.Connection.Open();
-            //    try
-            //    {
-            //        string query = $"delete from {db.Table}";
-            //        SqlCommand cmd = new SqlCommand(query, db.Connection);
-            //        cmd.ExecuteNonQuery();
-
-            //        TestingData test = new TestingData(100000);
-            //        test.CreateTestData();
-
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        MessageBox.Show(ex.Message);
-            //        throw;
-            //    }
-            //    finally { db.Connection.Close(); }
-
-            //}
+            //Task t = Task.Run(() => generator());
         }
 
+        public void generator()
+        {
+        }
         private void txtInterval_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                if (int.TryParse(txtInterval.Text, out int value))
-                {
-                    ThreadInterval = value;
-                }
-                else
-                {
-                    txtInterval.Text = "";
-                }
-            }
+            //if (e.Key == Key.Enter)
+            //{
+            //    if (int.TryParse(txtInterval.Text, out int value))
+            //    {
+            //        ThreadInterval = value;
+            //    }
+            //    else
+            //    {
+            //        txtInterval.Text = "";
+            //    }
+            //}
         }
     }
 }
