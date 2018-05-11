@@ -15,15 +15,28 @@ namespace Serial_Client
         private bool running = false;
         private List<string> fifobuffer;
         private SerialPort Port;
+        public Thread ReadFromSerial;
+        public Thread IterateOverBuffer;
 
         public RWWorker()
         {
             Port = InitPort();
+            fifobuffer = new List<string>();
         }
 
         public void doWork()
         {
 
+            this.Running = true;
+            Port.Open();
+            ReadFromSerial = new Thread(Read);
+            IterateOverBuffer = new Thread(IterateOverList);
+            ReadFromSerial.Start();
+            IterateOverBuffer.Start();
+        }
+        public void stopWork()
+        {
+            this.Running = false;
         }
         public bool Running { get => running; set => running = value; }
 
@@ -72,6 +85,19 @@ namespace Serial_Client
         {
             var str = Port.ReadLine().Replace("\r", "");
             return str;
+        }
+        private void IterateOverList()
+        {
+            while (Running)
+            {
+                if (fifobuffer.Count > 0)
+                {
+                    //Dispatcher.Invoke(DispatcherPriority.Normal,new DispatcherdDelegate (Write(fifobuffer[0])));
+                    Write(fifobuffer[0]);
+                    fifobuffer.RemoveAt(0);
+                }
+                Thread.Sleep(100);
+            }
         }
         private void Read()
         {

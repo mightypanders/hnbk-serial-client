@@ -12,10 +12,6 @@ namespace Serial_Client
     public class MainViewModel : ViewModelBase
     {
         private int intervall;
-        private string _dBUrl;
-        private string _standort;
-        private string _raum;
-        private string _rechner;
         private bool running = false;
         private bool debug = false;
         private HnbkContext ctx = new HnbkContext();
@@ -25,11 +21,11 @@ namespace Serial_Client
         public RelayCommand StopRead { get; private set; }
         public RelayCommand FillTable { get; private set; }
         public RelayCommand GenerateTestValues { get; private set; }
-
+        private RWWorker worker;
         private void initButtonCommands()
         {
-            this.StartRead = new RelayCommand(() => { }, () => { return !Running; });
-            this.StopRead = new RelayCommand(() => { }, () => { return Running; });
+            this.StartRead = new RelayCommand(() => { doStartReadCommand(); }, () => { return !Running; });
+            this.StopRead = new RelayCommand(() => { doStopReadCommand(); }, () => { return Running; });
             this.FillTable = new RelayCommand(() => { doFillTableCommand(); });
             this.GenerateTestValues = new RelayCommand(() => { doGenerateTestValuesCommand(); }, () => { return !Running && Debug; });
         }
@@ -54,6 +50,7 @@ namespace Serial_Client
         #region Commands
         private void doFillTableCommand()
         {
+            tempDaten.Clear();
             DateTime compare = DateTime.Now.AddDays(-1);
             var output = ctx.Measurements.Where(x => x.Date >= compare).ToList();
             output.OrderBy(x => x.Date);
@@ -71,17 +68,21 @@ namespace Serial_Client
         }
         private void doStartReadCommand()
         {
-            Settings set = new Settings()
-            {
-                DBUrl = this.DBUrl,
-                Standort = this.Standort,
-                Raum = this.Raum,
-                Rechner = this.Rechner
-            };
 
+            if (worker == null)
+            {
+                worker = new RWWorker();
+                worker.doWork();
+            }
+            else
+            {
+
+            }
         }
         private void doStopReadCommand()
         {
+            if (worker != null)
+                worker.stopWork();
         }
         #endregion
 
@@ -171,45 +172,45 @@ namespace Serial_Client
         #region DB Settings
         public string DBUrl
         {
-            get => _dBUrl;
+            get => Settings.DBUrl;
             set
             {
-                if (value == _dBUrl)
+                if (value == Settings.DBUrl)
                     return;
-                _dBUrl = value;
+                Settings.DBUrl = value;
                 this.RaisePropertyChanged("DBUrl");
             }
         }
         public string Standort
         {
-            get => _standort;
+            get => Settings.Standort;
             set
             {
-                if (value == _standort)
+                if (value == Settings.Standort)
                     return;
-                _standort = value;
+                Settings.Standort = value;
                 this.RaisePropertyChanged("Standort");
             }
         }
         public string Raum
         {
-            get => _raum;
+            get => Settings.Raum;
             set
             {
-                if (value == _raum)
+                if (value == Settings.Raum)
                     return;
-                _raum = value;
+                Settings.Raum = value;
                 this.RaisePropertyChanged("Raum");
             }
         }
         public string Rechner
         {
-            get => _rechner;
+            get => Settings.Rechner;
             set
             {
-                if (value == _rechner)
+                if (value == Settings.Rechner)
                     return;
-                _rechner = value;
+                Settings.Rechner = value;
                 this.RaisePropertyChanged("Raum");
             }
         }
