@@ -20,6 +20,7 @@ namespace Serial_Client
         public Thread ReadFromSerial;
         public Thread IterateOverBuffer;
         private string _workerState;
+        private int timeoutcounter = 0;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -42,16 +43,33 @@ namespace Serial_Client
         {
             this.Running = true;
             this.WorkerState = "Run";
-            Port.Open();
+            try
+            { Port.Open(); }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Can't open Port");
+                Console.WriteLine(ex.Message);
+            }
+
             ReadFromSerial = new Thread(Read);
             IterateOverBuffer = new Thread(IterateOverList);
-            ReadFromSerial.Start();
-            IterateOverBuffer.Start();
+
+            try
+            {
+                ReadFromSerial.Start();
+                IterateOverBuffer.Start();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Can't start worker threads");
+                Console.WriteLine(ex.Message);
+            }
         }
         public void stopWork()
         {
             this.WorkerState = "Stop";
             this.Running = false;
+            this.timeoutcounter = 0;
         }
         public string WorkerState
         {
@@ -72,7 +90,7 @@ namespace Serial_Client
                 if (value == running)
                     return;
                 running = value;
-                OnPropertyChanged("Running");
+                OnPropertyChanged("");
             }
         }
 
@@ -88,39 +106,70 @@ namespace Serial_Client
             };
             return port;
         }
-
         private void Write(string message)
         {
-            Measurement data = new Measurement()
+            try
             {
-                Temperature = float.Parse(message.Replace(".", ",")),
-                Date = DateTime.Now
-            };
-            HnbkContext context = new HnbkContext();
-            var location = context.Locations.FirstOrDefault(x => x.Name == Settings.Standort) ?? new Location()
-            {
-                Name = Settings.Standort
-            };
-
-            var position =
-                context.Positions.SingleOrDefault(x => x.Room == Settings.Raum && x.PcNumber == Settings.Rechner) ??
-                new Position()
+                Measurement data = new Measurement()
                 {
-                    Room = Settings.Raum,
-                    PcNumber = Settings.Rechner
+                    Temperature = float.Parse(message.Replace(".", ",")),
+                    Date = DateTime.Now
+                };
+                HnbkContext context = new HnbkContext();
+                var location = context.Locations.FirstOrDefault(x => x.Name == Settings.Standort) ?? new Location()
+                {
+                    Name = Settings.Standort
                 };
 
-            data.Position = position;
-            data.Position.Location = location;
+                var position =
+                    context.Positions.SingleOrDefault(x => x.Room == Settings.Raum && x.PcNumber == Settings.Rechner) ??
+                    new Position()
+                    {
+                        Room = Settings.Raum,
+                        PcNumber = Settings.Rechner
+                    };
 
-            context.Measurements.Add(data);
-            context.SaveChanges();
-            //FillGrid();
+                data.Position = position;
+                data.Position.Location = location;
+
+                context.Measurements.Add(data);
+                context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(String.Format("Error during Write {0}", ex.Message));
+                this.stopWork();
+            }            //FillGrid();
         }
         private string getStringfromSerialPort()
         {
-            Port.ReadTimeout = 100;
-            var str = Port.ReadLine().Replace("\r", "");
+            string str = "";
+            try
+            {
+                Port.ReadTimeout = 100;
+                str = Port.ReadLine().Replace("\r", "");
+
+            }
+            catch (InvalidOperationException inv)
+            {
+                Console.WriteLine("Can't read from port");
+                Console.WriteLine(inv.Message);
+                this.stopWork();
+            }
+            catch (TimeoutException tim)
+            {
+                Console.WriteLine("Read from Port timed out.");
+                Console.WriteLine(tim.Message);
+                timeoutcounter++;
+                //this.stopWork();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Something else went wrong during read from Port.");
+                Console.WriteLine(ex.Message);
+                this.stopWork();
+            }
             return str;
         }
         private void IterateOverList()
@@ -130,8 +179,22 @@ namespace Serial_Client
                 if (fifobuffer.Count > 0)
                 {
                     //Dispatcher.Invoke(DispatcherPriority.Normal,new DispatcherdDelegate (Write(fifobuffer[0])));
-                    Write(fifobuffer[0]);
-                    fifobuffer.RemoveAt(0);
+                    try
+                    {
+                        Write(fifobuffer[0]);
+                        fifobuffer.RemoveAt(0);
+
+                    }
+                    catch (ArgumentOutOfRangeException oor)
+                    {
+                        Console.WriteLine("Error during buffer access.");
+                        Console.WriteLine(oor.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Unrecognized Error during Buffer read");
+                        Console.WriteLine(ex.Message);
+                    }
                 }
                 Thread.Sleep(100);
             }
@@ -155,7 +218,17 @@ namespace Serial_Client
                     Debug.WriteLine(e.Message);
                 }
                 Thread.Sleep(Settings.Intervall * 1000);
+                if (timeoutcounter >= 10)
+                    this.stopWork();
             }
+            if (Port.IsOpen)
+                Port.Close();
+            if (Port != null)
+            {
+                Port.Dispose();
+                Port = null;
+            }
+
         }
     }
 }
