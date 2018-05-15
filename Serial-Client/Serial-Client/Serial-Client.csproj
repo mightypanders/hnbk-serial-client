@@ -96,6 +96,7 @@
       <DependentUpon>201801311705004_Float.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\Position.cs" />
     <Compile Include="Models\Measurement.cs" />
