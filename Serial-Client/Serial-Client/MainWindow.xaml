@@ -1,8 +1,8 @@
 ﻿<Window x:Class="Serial_Client.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Serial_Client"
         xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
@@ -87,6 +87,12 @@
                         <StackPanel Width="200">
                             <Label Content="Datenbank URL" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <TextBox x:Name="txtDBAdress" Height="25" VerticalAlignment="Top" Text="{Binding DBUrl,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Content="Datenbank Name" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            <TextBox x:Name="txtDBname" Height="25" VerticalAlignment="Top" Text="{Binding DBName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Content="Datenbank User" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            <TextBox x:Name="txtDBUSer" Height="25" VerticalAlignment="Top" Text="{Binding DBName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            <Label Content="Datenbank Passwort" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            <PasswordBox x:Name="txtDPass" Height="25" VerticalAlignment="Top"/>
                             <Label Content="Rechnername" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <TextBox x:Name="txtPCName" Height="25" VerticalAlignment="Top" Text="{Binding Rechner,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                             <Label Content="Standort" HorizontalAlignment="Left"  VerticalAlignment="Top" />

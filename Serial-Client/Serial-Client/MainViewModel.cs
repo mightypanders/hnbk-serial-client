@@ -24,44 +24,23 @@ namespace Serial_Client
         public RelayCommand StopRead { get; private set; }
         public RelayCommand FillTable { get; private set; }
         public RelayCommand GenerateTestValues { get; private set; }
-        private void initButtonCommands()
+
+        public void initButtonCommands()
         {
             this.Closing = new RelayCommand(() => { doClosingCommand(); });
-            this.StartRead = new RelayCommand(
-                () => { doStartReadCommand(); },
-                () =>
-                {
-                    if (Worker != null)
-                        return !Worker.Running;
-                    else return true;
-
-                });
-            this.StopRead = new RelayCommand(
-                () => { doStopReadCommand(); },
-                () =>
-                {
-                    if (Worker != null)
-                        return Worker.Running;
-                    else
-                        return false;
-                });
+            this.StartRead = new RelayCommand(() => { doStartReadCommand(); });
+            this.StopRead = new RelayCommand(() => { doStopReadCommand(); });
             this.FillTable = new RelayCommand(() => { Task.Run(() => doFillTableCommand()); });
             this.GenerateTestValues = new RelayCommand(() => { doGenerateTestValuesCommand(); }, () => { return !Running && Debug; });
         }
-
-        private void doClosingCommand()
-        {
-            doStopReadCommand();
-        }
-
         public MainViewModel()
         {
 #if DEBUG
             Debug = true;
 #endif
-            Worker = new RWWorker();
             tempDaten = new ObservableCollection<Models.Measurement>();
             initButtonCommands();
+            Worker = new RWWorker();
             Intervall = 5;
             PortOptions.ListAllComPorts();
 
@@ -73,6 +52,10 @@ namespace Serial_Client
         }
 
         #region Commands
+        private void doClosingCommand()
+        {
+            doStopReadCommand();
+        }
         private void doFillTableCommand()
         {
             DispatcherHelper.CheckBeginInvokeOnUI(() =>
@@ -218,6 +201,39 @@ namespace Serial_Client
                 this.RaisePropertyChanged("DBUrl");
             }
         }
+        public string DBName
+        {
+            get => Settings.DBName;
+            set
+            {
+                if (value == Settings.DBName)
+                    return;
+                Settings.DBName = value;
+                this.RaisePropertyChanged("DBName");
+            }
+        }
+        public string DBUser {
+            get => Settings.DbUser;
+            set
+            {
+                if (Settings.DbUser == value)
+                    return;
+                Settings.DbUser = value;
+                this.RaisePropertyChanged("DBUser");
+            }
+        }
+        public string DBPass
+        {
+            get => Settings.DbPass;
+            set
+            {
+                if (Settings.DbPass == value)
+                    return;
+                Settings.DbPass = value;
+                this.RaisePropertyChanged("DBPass");
+                    
+            }
+        }
         public string Standort
         {
             get => Settings.Standort;
@@ -262,13 +278,6 @@ namespace Serial_Client
                     return Worker.Running;
                 else
                     return false;
-            }
-            set
-            {
-                if (value == running)
-                    return;
-                running = value;
-                this.RaisePropertyChanged("Running");
             }
         }
         public bool Debug
