@@ -7,7 +7,8 @@
         xmlns:local="clr-namespace:Serial_Client"
         xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
         mc:Ignorable="d"
-        Title="Window1" Height="594" Width="500"
+        Height="594" Width="500"
+        Title="Temperatur Logger"
         SizeToContent="Width">
     <Window.DataContext>
         <Binding Path="Main" Source="{StaticResource Locator}"/>
@@ -22,7 +23,7 @@
     </i:Interaction.Triggers>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="200" />
+            <ColumnDefinition MinWidth="200" MaxWidth="250" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -43,8 +44,8 @@
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="1">
             <TextBlock Text="Geladene Temperatur Werte: " VerticalAlignment="Center" Margin="5,0,5,0"/>
             <TextBlock Text="{Binding TempDaten.Count}" VerticalAlignment="Center"/>
-            <RadioButton IsChecked="{Binding Worker.Running,UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBlock Text="{Binding Worker.WorkerState}"/>
+            <!--<RadioButton IsChecked="{Binding Worker.Running,UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="{Binding Worker.WorkerState}"/>-->
         </StackPanel>
         <DockPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" >
             <StackPanel DockPanel.Dock="Bottom">
@@ -85,14 +86,14 @@
                     </Expander>
                     <Expander Header="Database">
                         <StackPanel Width="200">
-                            <Label Content="Datenbank URL" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <!--<Label Content="Datenbank URL" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <TextBox x:Name="txtDBAdress" Height="25" VerticalAlignment="Top" Text="{Binding DBUrl,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                             <Label Content="Datenbank Name" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                             <TextBox x:Name="txtDBname" Height="25" VerticalAlignment="Top" Text="{Binding DBName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                             <Label Content="Datenbank User" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                             <TextBox x:Name="txtDBUSer" Height="25" VerticalAlignment="Top" Text="{Binding DBName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                             <Label Content="Datenbank Passwort" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                            <PasswordBox x:Name="txtDPass" Height="25" VerticalAlignment="Top"/>
+                            <PasswordBox x:Name="txtDPass" Height="25" VerticalAlignment="Top"/>-->
                             <Label Content="Rechnername" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <TextBox x:Name="txtPCName" Height="25" VerticalAlignment="Top" Text="{Binding Rechner,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                             <Label Content="Standort" HorizontalAlignment="Left"  VerticalAlignment="Top" />
