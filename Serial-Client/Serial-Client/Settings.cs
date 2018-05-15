@@ -9,6 +9,9 @@ namespace Serial_Client
     public static class Settings
     {
         private static string _dBUrl;
+        private static string _dBName;
+        private static string _dbUser;
+        private static string _dbPass;
         private static string _standort;
         private static string _raum;
         private static string _rechner;
@@ -19,5 +22,8 @@ namespace Serial_Client
         public static string Raum { get => _raum; set => _raum = value; }
         public static string Rechner { get => _rechner; set => _rechner = value; }
         public static int Intervall { get => _intervall; set => _intervall = value; }
+        public static string DBName { get => _dBName; set => _dBName = value; }
+        public static string DbUser { get => _dbUser; set => _dbUser = value; }
+        public static string DbPass { get => _dbPass; set => _dbPass = value; }
     }
 }
