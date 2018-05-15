@@ -209,7 +209,7 @@ namespace Serial_Client
     public static class TestGenerator
     {
 
-        public static void Generate(HnbkContext ctx, DateTime startDate, DateTime endDate, TestInvervall intervall)
+        public static void Generate(HnbkContext ctx, DateTime startDate, DateTime endDate, TestInvervall intervalltype, int intervallTime)
         {
             Random r = new Random();
 
@@ -217,28 +217,28 @@ namespace Serial_Client
 
             while (startDate <= endDate)
             {
-                switch (intervall)
+                switch (intervalltype)
                 {
                     case TestInvervall.Milliseconds:
-                        startDate = startDate.AddMilliseconds(1);
+                        startDate = startDate.AddMilliseconds(intervallTime);
                         break;
                     case TestInvervall.Seconds:
-                        startDate = startDate.AddSeconds(1);
+                        startDate = startDate.AddSeconds(intervallTime);
                         break;
                     case TestInvervall.Minutes:
-                        startDate = startDate.AddMinutes(1);
+                        startDate = startDate.AddMinutes(intervallTime);
                         break;
                     case TestInvervall.Hours:
-                        startDate = startDate.AddHours(1);
+                        startDate = startDate.AddHours(intervallTime);
                         break;
                     case TestInvervall.Days:
-                        startDate = startDate.AddDays(1);
+                        startDate = startDate.AddDays(intervallTime);
                         break;
                     case TestInvervall.Months:
-                        startDate = startDate.AddMonths(1);
+                        startDate = startDate.AddMonths(intervallTime);
                         break;
                     case TestInvervall.Years:
-                        startDate = startDate.AddYears(1);
+                        startDate = startDate.AddYears(intervallTime);
                         break;
                     default:
                         break;

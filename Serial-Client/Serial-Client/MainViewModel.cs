@@ -76,7 +76,7 @@ namespace Serial_Client
         {
             Task t = Task.Run(() =>
             {
-                TestGenerator.Generate(this.ctx, new DateTime(2018, 01, 01), new DateTime(2018, 05,16), Models.TestInvervall.Days);
+                TestGenerator.Generate(this.ctx, new DateTime(2018, 01, 01), new DateTime(2018, 05,16), Models.TestInvervall.Hours, 6);
             });
         }
         private void doStartReadCommand()
