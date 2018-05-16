@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Markup;
 
 namespace Serial_Client
@@ -51,6 +53,21 @@ namespace Serial_Client
             Array tempArray = Array.CreateInstance(actualEnumType, enumValues.Length + 1);
             enumValues.CopyTo(tempArray, 1);
             return tempArray;
+        }
+    }
+    [ValueConversion(typeof(bool), typeof(bool))]
+    public class InvertBoolConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool booleanValue = (bool)value;
+            return !booleanValue;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool booleanValue = (bool)value;
+            return !booleanValue;
         }
     }
 }

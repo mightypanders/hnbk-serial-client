@@ -7,6 +7,14 @@
         xmlns:local="clr-namespace:Serial_Client"
         xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
         mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         Height="594" Width="500"
         Title="Temperatur Logger"
         SizeToContent="Width">
@@ -15,6 +23,7 @@
     </Window.DataContext>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="b2v" />
+        <local:InvertBoolConverter x:Key="invertBoolConverter"/>
     </Window.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
@@ -23,7 +32,7 @@
     </i:Interaction.Triggers>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="200" MaxWidth="250" />
+            <ColumnDefinition MinWidth="220" MaxWidth="250" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -50,9 +59,9 @@
         <DockPanel Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" >
             <StackPanel DockPanel.Dock="Bottom">
                 <Button x:Name="btnTestWerte" Grid.Column="0" Margin="5" Height="40" Content="Testwerte generieren" Command="{Binding GenerateTestValues}" Visibility="{Binding Debug,Converter={StaticResource b2v}}"/>
-                <Button x:Name="btnFillgrid" Grid.Column="0" Margin="5" Height="40" Content="Fill Grid" Command="{Binding FillTable}"/>
-                <Button x:Name="btnStart" Grid.Column="0"  Margin="5" Height="40" Content="Start" Command="{Binding StartRead}"/>
-                <Button x:Name="btnStop" Grid.Column="0"  Margin="5" Height="40" Content="Stop" Command="{Binding StopRead}"/>
+                <Button x:Name="btnFillgrid" Grid.Column="0" Margin="5" Height="40" Content="Fill Grid"  Style="{DynamicResource MaterialDesignRaisedLightButton}" Command="{Binding FillTable}"/>
+                <Button x:Name="btnStart" Grid.Column="0"  Margin="5" Height="40" Content="Start" Style="{DynamicResource MaterialDesignRaisedAccentButton}" IsEnabled="{Binding Worker.Running, Converter={StaticResource invertBoolConverter}}" Command="{Binding StartRead}"/>
+                <Button x:Name="btnStop" Grid.Column="0"  Margin="5" Height="40" Content="Stop" IsEnabled="{Binding Worker.Running}" Command="{Binding StopRead}"/>
             </StackPanel>
             <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
                 <StackPanel>
