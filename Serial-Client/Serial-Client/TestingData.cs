@@ -209,38 +209,72 @@ namespace Serial_Client
     public static class TestGenerator
     {
 
-        public static void generate(HnbkContext ctx)
+        public static void Generate(HnbkContext ctx, DateTime startDate, DateTime endDate, TestInvervall intervalltype, int intervallTime)
         {
             Random r = new Random();
 
-            var position = new Position()
+            var locations = ctx.Locations.ToList();
+
+            while (startDate <= endDate)
             {
-                Room = "HNNTest",
-                PcNumber = "4711"
-            };
-            var location = new Location()
-            {
-                Name = "Testraum"
-            };
-            for (int month = 1; month <= 12; month++)
-            {
-                for (int day = 1; day <= 28; day++)
+                switch (intervalltype)
                 {
-                    for (int hour = 0; hour < 24; hour++)
+                    case TestInvervall.Milliseconds:
+                        startDate = startDate.AddMilliseconds(intervallTime);
+                        break;
+                    case TestInvervall.Seconds:
+                        startDate = startDate.AddSeconds(intervallTime);
+                        break;
+                    case TestInvervall.Minutes:
+                        startDate = startDate.AddMinutes(intervallTime);
+                        break;
+                    case TestInvervall.Hours:
+                        startDate = startDate.AddHours(intervallTime);
+                        break;
+                    case TestInvervall.Days:
+                        startDate = startDate.AddDays(intervallTime);
+                        break;
+                    case TestInvervall.Months:
+                        startDate = startDate.AddMonths(intervallTime);
+                        break;
+                    case TestInvervall.Years:
+                        startDate = startDate.AddYears(intervallTime);
+                        break;
+                    default:
+                        break;
+                }
+
+                if (locations.Count == 0)
+                {
+                    locations.Add(new Location()
                     {
-                        //for (int minute = 0; minute < 60; minute++)
-                        //{
-                        Measurement data = new Measurement();
-                        data.Temperature = (NextFloat(r));
-                        data.Date = new DateTime(2018, month, day, hour, 1, 0);
-                        data.Position = position;
-                        data.Position.Location = location;
-                        ctx.Measurements.Add(data);
-                        ctx.SaveChanges();
-                        //}
+                        Name = "Testraum"
+                    });
+                }
+
+                for (int i = 0; i < locations.Count; i++)
+                {
+                    if (locations[i].Positions.Count == 0)
+                    {
+                        locations[i].Positions.Add(new Position()
+                        {
+                            Location = locations[i],
+                            PcNumber = "PC" + (i + 1),
+                            Room = "HNN10"+ (i + 1)
+                        });
                     }
+
+                    Measurement data = new Measurement
+                    {
+                        Temperature = (NextFloat(r)),
+                        Date = startDate,
+                        Position = locations[i].Positions[0]
+                    };
+                    data.Position.Location = locations[i];
+                    ctx.Measurements.Add(data);
                 }
             }
+                ctx.SaveChanges();
         }
 
         static float NextFloat(Random random)
