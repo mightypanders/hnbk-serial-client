@@ -63,7 +63,7 @@ namespace Serial_Client
                 tempDaten.Clear();
                 DateTime compare = DateTime.Now.AddDays(-10);
                 var output = ctx.Measurements
-                    //.Where(x => x.Date >= compare)
+                    .Where(x => x.Date >= compare)
                     .ToList();
                 output.OrderBy(x => x.Date);
                 foreach (var item in output)
