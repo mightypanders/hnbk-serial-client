@@ -17,13 +17,85 @@ namespace Serial_Client
         private static string _rechner;
         private static int _intervall;
 
-        public static string DBUrl { get => _dBUrl; set => _dBUrl = value; }
-        public static string Standort { get => _standort; set => _standort = value; }
-        public static string Raum { get => _raum; set => _raum = value; }
-        public static string Rechner { get => _rechner; set => _rechner = value; }
-        public static int Intervall { get => _intervall; set => _intervall = value; }
-        public static string DBName { get => _dBName; set => _dBName = value; }
-        public static string DbUser { get => _dbUser; set => _dbUser = value; }
-        public static string DbPass { get => _dbPass; set => _dbPass = value; }
+        public static string DBUrl
+        {
+            get { return _dBUrl; }
+            set
+            {
+                _dBUrl = value;
+            }
+        }
+        public static string Standort
+        {
+            get { return _standort; }
+            set
+            {
+                _standort = value;
+            }
+        }
+        public static string Raum
+        {
+            get { return _raum; }
+            set
+            {
+                _raum = value;
+            }
+        }
+        public static string Rechner
+        {
+            get { return _rechner; }
+            set
+            {
+                _rechner = value;
+            }
+        }
+        public static int Intervall
+        {
+            get
+            {
+                return _intervall;
+            }
+
+            set
+            {
+                _intervall = value;
+            }
+        }
+        public static string DBName
+        {
+            get
+            {
+                return _dBName;
+            }
+
+            set
+            {
+                _dBName = value;
+            }
+        }
+        public static string DbUser
+        {
+            get
+            {
+                return _dbUser;
+            }
+
+            set
+            {
+                _dbUser = value;
+            }
+        }
+        public static string DbPass
+        {
+            get
+            {
+                return _dbPass;
+            }
+
+            set
+            {
+                _dbPass = value;
+            }
+        }
     }
 }

@@ -27,13 +27,90 @@ namespace Serial_Client
             this.Counter = counter;
         }
 
-        public int Counter { get => counter; set => counter = value; }
-        public DataBase Db { get => db; set => db = value; }
-        public Temperature Temperature { get => temperature; set => temperature = value; }
-        public Brightness Brightness { get => brightness; set => brightness = value; }
-        public Humidity Humidity { get => humidity; set => humidity = value; }
-        public WindVelocity WindVelocity { get => windVelocity; set => windVelocity = value; }
-        public Date Date { get => date; set => date = value; }
+        public int Counter
+        {
+            get
+            {
+                return counter;
+            }
+
+            set
+            {
+                counter = value;
+            }
+        }
+        public DataBase Db
+        {
+            get
+            {
+                return db;
+            }
+
+            set
+            {
+                db = value;
+            }
+        }
+        public Temperature Temperature
+        {
+            get
+            {
+                return temperature;
+            }
+
+            set
+            {
+                temperature = value;
+            }
+        }
+        public Brightness Brightness
+        {
+            get
+            {
+                return brightness;
+            }
+
+            set
+            {
+                brightness = value;
+            }
+        }
+        public Humidity Humidity
+        {
+            get
+            {
+                return humidity;
+            }
+
+            set
+            {
+                humidity = value;
+            }
+        }
+        public WindVelocity WindVelocity
+        {
+            get
+            {
+                return windVelocity;
+            }
+
+            set
+            {
+                windVelocity = value;
+            }
+        }
+        public Date Date
+        {
+            get
+            {
+                return date;
+            }
+
+            set
+            {
+                date = value;
+            }
+        }
 
         public void CreateTestData()
         {
@@ -106,12 +183,78 @@ namespace Serial_Client
         private string password = "hnbkserial";
         private string table = "Wetter";
 
-        public string ServerName { get => serverName; set => serverName = value; }
-        public string Database { get => database; set => database = value; }
-        public string User { get => user; set => user = value; }
-        public string Password { get => password; set => password = value; }
-        public string Table { get => table; set => table = value; }
-        public SqlConnection Connection { get => connection; set => connection = value; }
+        public string ServerName
+        {
+            get
+            {
+                return serverName;
+            }
+
+            set
+            {
+                serverName = value;
+            }
+        }
+        public string Database
+        {
+            get
+            {
+                return database;
+            }
+
+            set
+            {
+                database = value;
+            }
+        }
+        public string User
+        {
+            get
+            {
+                return user;
+            }
+
+            set
+            {
+                user = value;
+            }
+        }
+        public string Password
+        {
+            get
+            {
+                return password;
+            }
+
+            set
+            {
+                password = value;
+            }
+        }
+        public string Table
+        {
+            get
+            {
+                return table;
+            }
+
+            set
+            {
+                table = value;
+            }
+        }
+        public SqlConnection Connection
+        {
+            get
+            {
+                return connection;
+            }
+
+            set
+            {
+                connection = value;
+            }
+        }
         public DataBase()
         {
             Connection.ConnectionString = $"Data Source={this.ServerName};Initial Catalog={this.Database};User id={this.User};Password={this.Password};";
@@ -131,9 +274,42 @@ namespace Serial_Client
             this.Decrement = Decrement;
         }
 
-        public int BaseTemperature { get => baseTemperature; set => baseTemperature = value; }
-        public int Increment { get => increment; set => increment = value; }
-        public int Decrement { get => decrement; set => decrement = value; }
+        public int BaseTemperature
+        {
+            get
+            {
+                return baseTemperature;
+            }
+
+            set
+            {
+                baseTemperature = value;
+            }
+        }
+        public int Increment
+        {
+            get
+            {
+                return increment;
+            }
+
+            set
+            {
+                increment = value;
+            }
+        }
+        public int Decrement
+        {
+            get
+            {
+                return decrement;
+            }
+
+            set
+            {
+                decrement = value;
+            }
+        }
     }
 
     public class Brightness
@@ -149,9 +325,42 @@ namespace Serial_Client
             this.Decrement = Decrement;
         }
 
-        public int BaseBrightness { get => baseBrightness; set => baseBrightness = value; }
-        public int Increment { get => increment; set => increment = value; }
-        public int Decrement { get => decrement; set => decrement = value; }
+        public int BaseBrightness
+        {
+            get
+            {
+                return baseBrightness;
+            }
+
+            set
+            {
+                baseBrightness = value;
+            }
+        }
+        public int Increment
+        {
+            get
+            {
+                return increment;
+            }
+
+            set
+            {
+                increment = value;
+            }
+        }
+        public int Decrement
+        {
+            get
+            {
+                return decrement;
+            }
+
+            set
+            {
+                decrement = value;
+            }
+        }
     }
 
     public class Humidity
@@ -167,9 +376,42 @@ namespace Serial_Client
             this.Decrement = Decrement;
         }
 
-        public int BaseHumidity { get => baseHumidity; set => baseHumidity = value; }
-        public int Increment { get => increment; set => increment = value; }
-        public int Decrement { get => decrement; set => decrement = value; }
+        public int BaseHumidity
+        {
+            get
+            {
+                return baseHumidity;
+            }
+
+            set
+            {
+                baseHumidity = value;
+            }
+        }
+        public int Increment
+        {
+            get
+            {
+                return increment;
+            }
+
+            set
+            {
+                increment = value;
+            }
+        }
+        public int Decrement
+        {
+            get
+            {
+                return decrement;
+            }
+
+            set
+            {
+                decrement = value;
+            }
+        }
     }
 
     public class WindVelocity
@@ -185,9 +427,42 @@ namespace Serial_Client
             this.Decrement = Decrement;
         }
 
-        public int BaseWindVelocity { get => baseWindVelocity; set => baseWindVelocity = value; }
-        public int Increment { get => increment; set => increment = value; }
-        public int Decrement { get => decrement; set => decrement = value; }
+        public int BaseWindVelocity
+        {
+            get
+            {
+                return baseWindVelocity;
+            }
+
+            set
+            {
+                baseWindVelocity = value;
+            }
+        }
+        public int Increment
+        {
+            get
+            {
+                return increment;
+            }
+
+            set
+            {
+                increment = value;
+            }
+        }
+        public int Decrement
+        {
+            get
+            {
+                return decrement;
+            }
+
+            set
+            {
+                decrement = value;
+            }
+        }
     }
 
     public class Date
@@ -201,9 +476,42 @@ namespace Serial_Client
             this.LastDateOfDatabase = lastDateOfDatabase;
         }
 
-        public DateTime StartDate { get => startDate; set => startDate = value; }
-        public int IncrementMinutes { get => incrementMinutes; set => incrementMinutes = value; }
-        public bool LastDateOfDatabase { get => lastDateOfDatabase; set => lastDateOfDatabase = value; }
+        public DateTime StartDate
+        {
+            get
+            {
+                return startDate;
+            }
+
+            set
+            {
+                startDate = value;
+            }
+        }
+        public int IncrementMinutes
+        {
+            get
+            {
+                return incrementMinutes;
+            }
+
+            set
+            {
+                incrementMinutes = value;
+            }
+        }
+        public bool LastDateOfDatabase
+        {
+            get
+            {
+                return lastDateOfDatabase;
+            }
+
+            set
+            {
+                lastDateOfDatabase = value;
+            }
+        }
     }
 
     public static class TestGenerator

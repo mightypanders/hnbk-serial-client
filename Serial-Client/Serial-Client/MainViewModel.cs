@@ -104,7 +104,11 @@ namespace Serial_Client
         #region Daten
         public ObservableCollection<Models.Measurement> TempDaten
         {
-            get => tempDaten;
+            get
+            {
+                return tempDaten;
+            }
+
             set
             {
                 if (value == tempDaten)
@@ -123,7 +127,11 @@ namespace Serial_Client
         #region Arduino Settings
         public string SelectedPort
         {
-            get => PortOptions.PortName;
+            get
+            {
+                return PortOptions.PortName;
+            }
+
             set
             {
                 if (value == PortOptions.PortName)
@@ -134,7 +142,11 @@ namespace Serial_Client
         }
         public Handshake SelectedHandshake
         {
-            get => PortOptions.Handshake;
+            get
+            {
+                return PortOptions.Handshake;
+            }
+
             set
             {
                 if (value == PortOptions.Handshake)
@@ -145,7 +157,11 @@ namespace Serial_Client
         }
         public StopBits SelectedStopBits
         {
-            get => PortOptions.StopBits;
+            get
+            {
+                return PortOptions.StopBits;
+            }
+
             set
             {
                 if (value == PortOptions.StopBits)
@@ -156,7 +172,11 @@ namespace Serial_Client
         }
         public int SelectedBaudRate
         {
-            get => PortOptions.BaudRate;
+            get
+            {
+                return PortOptions.BaudRate;
+            }
+
             set
             {
                 if (value == PortOptions.BaudRate)
@@ -167,7 +187,11 @@ namespace Serial_Client
         }
         public int SelectedDataBit
         {
-            get => PortOptions.DataBits;
+            get
+            {
+                return PortOptions.DataBits;
+            }
+
             set
             {
                 if (value == PortOptions.DataBits)
@@ -178,7 +202,11 @@ namespace Serial_Client
         }
         public int Intervall
         {
-            get => Settings.Intervall;
+            get
+            {
+                return Settings.Intervall;
+            }
+
             set
             {
                 if (value == Settings.Intervall)
@@ -192,7 +220,11 @@ namespace Serial_Client
         #region DB Settings
         public string DBUrl
         {
-            get => Settings.DBUrl;
+            get
+            {
+                return Settings.DBUrl;
+            }
+
             set
             {
                 if (value == Settings.DBUrl)
@@ -203,7 +235,11 @@ namespace Serial_Client
         }
         public string DBName
         {
-            get => Settings.DBName;
+            get
+            {
+                return Settings.DBName;
+            }
+
             set
             {
                 if (value == Settings.DBName)
@@ -212,8 +248,13 @@ namespace Serial_Client
                 this.RaisePropertyChanged("DBName");
             }
         }
-        public string DBUser {
-            get => Settings.DbUser;
+        public string DBUser
+        {
+            get
+            {
+                return Settings.DbUser;
+            }
+
             set
             {
                 if (Settings.DbUser == value)
@@ -224,19 +265,27 @@ namespace Serial_Client
         }
         public string DBPass
         {
-            get => Settings.DbPass;
+            get
+            {
+                return Settings.DbPass;
+            }
+
             set
             {
                 if (Settings.DbPass == value)
                     return;
                 Settings.DbPass = value;
                 this.RaisePropertyChanged("DBPass");
-                    
+
             }
         }
         public string Standort
         {
-            get => Settings.Standort;
+            get
+            {
+                return Settings.Standort;
+            }
+
             set
             {
                 if (value == Settings.Standort)
@@ -247,7 +296,11 @@ namespace Serial_Client
         }
         public string Raum
         {
-            get => Settings.Raum;
+            get
+            {
+                return Settings.Raum;
+            }
+
             set
             {
                 if (value == Settings.Raum)
@@ -258,7 +311,11 @@ namespace Serial_Client
         }
         public string Rechner
         {
-            get => Settings.Rechner;
+            get
+            {
+                return Settings.Rechner;
+            }
+
             set
             {
                 if (value == Settings.Rechner)
@@ -282,7 +339,11 @@ namespace Serial_Client
         }
         public bool Debug
         {
-            get => debug;
+            get
+            {
+                return debug;
+            }
+
             set
             {
                 if (value == debug)

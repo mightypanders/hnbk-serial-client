@@ -73,7 +73,11 @@ namespace Serial_Client
         }
         public string WorkerState
         {
-            get => _workerState;
+            get
+            {
+                return _workerState;
+            }
+
             set
             {
                 if (value == _workerState)
@@ -84,7 +88,11 @@ namespace Serial_Client
         }
         public bool Running
         {
-            get => running;
+            get
+            {
+                return running;
+            }
+
             set
             {
                 if (value == running)

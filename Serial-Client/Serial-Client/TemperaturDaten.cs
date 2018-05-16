@@ -16,11 +16,77 @@ namespace Serial_Client
         string _standort;
         
 
-        public decimal Temperatur { get => _temperatur; set => _temperatur = value; }
-        public DateTime Datum { get => _datum; set => _datum = value; }
-        public string Workstation { get => _workstation; set => _workstation = value; }
-        public string Rechnername { get => _rechnername; set => _rechnername = value; }
-        public string Pcnumber { get => _pcnumber; set => _pcnumber = value; }
-        public string Standort { get => _standort; set => _standort = value; }
+        public decimal Temperatur
+        {
+            get
+            {
+                return _temperatur;
+            }
+
+            set
+            {
+                _temperatur = value;
+            }
+        }
+        public DateTime Datum
+        {
+            get
+            {
+                return _datum;
+            }
+
+            set
+            {
+                _datum = value;
+            }
+        }
+        public string Workstation
+        {
+            get
+            {
+                return _workstation;
+            }
+
+            set
+            {
+                _workstation = value;
+            }
+        }
+        public string Rechnername
+        {
+            get
+            {
+                return _rechnername;
+            }
+
+            set
+            {
+                _rechnername = value;
+            }
+        }
+        public string Pcnumber
+        {
+            get
+            {
+                return _pcnumber;
+            }
+
+            set
+            {
+                _pcnumber = value;
+            }
+        }
+        public string Standort
+        {
+            get
+            {
+                return _standort;
+            }
+
+            set
+            {
+                _standort = value;
+            }
+        }
     }
 }
