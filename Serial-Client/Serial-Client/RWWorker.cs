@@ -36,13 +36,14 @@ namespace Serial_Client
         }
         public void Init()
         {
-            Port = InitPort();
+            //Port = InitPort();
         }
 
         public void doWork()
         {
             this.Running = true;
             this.WorkerState = "Run";
+            this.timeoutcounter = 0;
             try
             { Port.Open(); }
             catch (Exception ex)
@@ -69,7 +70,6 @@ namespace Serial_Client
         {
             this.WorkerState = "Stop";
             this.Running = false;
-            this.timeoutcounter = 0;
         }
         public string WorkerState
         {
@@ -121,14 +121,18 @@ namespace Serial_Client
                     Name = Settings.Standort
                 };
 
-                var position =
-                    context.Positions.SingleOrDefault(x => x.Room == Settings.Raum && x.PcNumber == Settings.Rechner) ??
-                    new Position()
-                    {
-                        Room = Settings.Raum,
-                        PcNumber = Settings.Rechner
-                    };
+                var position = context.Positions.SingleOrDefault(x => x.PcNumber == Settings.Rechner && x.Room == Settings.Raum);
 
+                if (position == null)
+                {
+                    position =
+                      context.Positions.SingleOrDefault(x => x.Room == Settings.Raum && x.PcNumber == Settings.Rechner) ??
+                      new Position()
+                      {
+                          Room = Settings.Raum,
+                          PcNumber = Settings.Rechner
+                      };
+                }
                 data.Position = position;
                 data.Position.Location = location;
 
@@ -147,9 +151,18 @@ namespace Serial_Client
             string str = "";
             try
             {
-                Port.ReadTimeout = 100;
-                str = Port.ReadLine().Replace("\r", "");
-
+                using (Port = InitPort())
+                {
+                    Port.Open();
+                    Port.ReadTimeout = 1000;
+                    str = Port.ReadLine().Replace("\r", "");
+                    Port.Close();
+                }
+                if (Port != null)
+                {
+                    Port.Dispose();
+                    Port = null;
+                }
             }
             catch (InvalidOperationException inv)
             {
@@ -196,7 +209,7 @@ namespace Serial_Client
                         Console.WriteLine(ex.Message);
                     }
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(1);
             }
         }
         private void Read()
@@ -221,13 +234,13 @@ namespace Serial_Client
                 if (timeoutcounter >= 10)
                     this.stopWork();
             }
-            if (Port.IsOpen)
-                Port.Close();
-            if (Port != null)
-            {
-                Port.Dispose();
-                Port = null;
-            }
+            //if (Port.IsOpen)
+            //    Port.Close();
+            //if (Port != null)
+            //{
+            //    Port.Dispose();
+            //    Port = null;
+            //}
 
         }
     }

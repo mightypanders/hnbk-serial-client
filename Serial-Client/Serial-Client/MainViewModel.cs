@@ -178,13 +178,13 @@ namespace Serial_Client
         }
         public int Intervall
         {
-            get => intervall;
+            get => Settings.Intervall;
             set
             {
-                if (value == intervall)
+                if (value == Settings.Intervall)
                     return;
-                intervall = value;
-                this.RaisePropertyChanged("Intervall");
+                Settings.Intervall = value;
+                this.RaisePropertyChanged("Settings.Intervall");
             }
         }
         #endregion
