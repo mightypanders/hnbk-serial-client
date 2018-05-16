@@ -61,11 +61,11 @@
                 <Button x:Name="btnTestWerte" Grid.Column="0" Margin="5" Height="40" Content="Testwerte generieren" Command="{Binding GenerateTestValues}" Visibility="{Binding Debug,Converter={StaticResource b2v}}"/>
                 <Button x:Name="btnFillgrid" Grid.Column="0" Margin="5" Height="40" Content="Liste füllen"  Style="{DynamicResource MaterialDesignRaisedLightButton}" Command="{Binding FillTable}"/>
                 <Button x:Name="btnStart" Grid.Column="0"  Margin="5" Height="40" Content="Start" Style="{DynamicResource MaterialDesignRaisedAccentButton}" IsEnabled="{Binding Worker.Running, Converter={StaticResource invertBoolConverter}}" Command="{Binding StartRead}"/>
-                <Button x:Name="btnStop" Grid.Column="0"  Margin="5" Height="40" Content="Stop" IsEnabled="{Binding Worker.Running}" Command="{Binding StopRead}"/>
+                <Button x:Name="btnStop" Grid.Column="0"  Margin="5" Height="40" Content="Stop" IsEnabled="{Binding Worker.Running,Mode=OneWay}" Command="{Binding StopRead}"/>
             </StackPanel>
             <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto">
                 <StackPanel>
-                    <Expander Header="Arduino" IsEnabled="{Binding Worker.Running,Converter={StaticResource invertBoolConverter}}" IsExpanded="{Binding Worker.Running, Converter={StaticResource invertBoolConverter}}">
+                    <Expander Header="Arduino" IsEnabled="{Binding Worker.Running,Converter={StaticResource invertBoolConverter}}" IsExpanded="{Binding Worker.Running, Mode=OneWay, Converter={StaticResource invertBoolConverter}}">
                         <Grid  Width="200"> 
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition MinWidth="80" Width="1*"/>
@@ -93,7 +93,7 @@
                             <TextBox x:Name="txtInterval" Margin="5" Grid.Column="1" Grid.Row="5" MaxLines="1" Text="{Binding Intervall,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center"/>
                         </Grid>
                     </Expander>
-                    <Expander Header="Database" >
+                    <Expander Header="Database">
                         <StackPanel Width="200">
                             <!--<Label Content="Datenbank URL" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <TextBox x:Name="txtDBAdress" Height="25" VerticalAlignment="Top" Text="{Binding DBUrl,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
@@ -104,11 +104,11 @@
                             <Label Content="Datenbank Passwort" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                             <PasswordBox x:Name="txtDPass" Height="25" VerticalAlignment="Top"/>-->
                             <Label Content="Rechnername" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                            <TextBox x:Name="txtPCName" Height="25" VerticalAlignment="Top" HorizontalContentAlignment="Center" IsEnabled="{Binding Worker.Running,Converter={StaticResource invertBoolConverter}}" Text="{Binding Rechner,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox x:Name="txtPCName" Height="25" VerticalAlignment="Top" HorizontalContentAlignment="Center" IsEnabled="{Binding Worker.Running, Mode=OneWay,Converter={StaticResource invertBoolConverter}}" Text="{Binding Rechner,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                             <Label Content="Standort" HorizontalAlignment="Left"  VerticalAlignment="Top" />
-                            <TextBox x:Name="txtStandort" Height="25" VerticalAlignment="Top" HorizontalContentAlignment="Center" IsEnabled="{Binding Worker.Running,Converter={StaticResource invertBoolConverter}}" Text="{Binding Standort,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox x:Name="txtStandort" Height="25" VerticalAlignment="Top" HorizontalContentAlignment="Center" IsEnabled="{Binding Worker.Running, Mode=OneWay,Converter={StaticResource invertBoolConverter}}" Text="{Binding Standort,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                             <Label Content="Raum" HorizontalAlignment="Left"  />
-                            <TextBox x:Name="txtRaum" Height="25" VerticalAlignment="Top" HorizontalContentAlignment="Center" IsEnabled="{Binding Worker.Running,Converter={StaticResource invertBoolConverter}}" Text="{Binding Raum,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox x:Name="txtRaum" Height="25" VerticalAlignment="Top" HorizontalContentAlignment="Center" IsEnabled="{Binding Worker.Running, Mode=OneWay,Converter={StaticResource invertBoolConverter}}" Text="{Binding Raum,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                     </Expander>
                 </StackPanel>
